@@ -16,7 +16,7 @@ namespace logicProject.Models.EF
         public string StaffType { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
-        public int DeptId { get; set; }
+        public string DeptId { get; set; }
         [ForeignKey("DeptId")]
         public virtual Department Department { get; set; }
     }

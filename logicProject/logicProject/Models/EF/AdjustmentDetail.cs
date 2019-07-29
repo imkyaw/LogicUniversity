@@ -12,7 +12,7 @@ namespace logicProject.Models.EF
         [Key]
         public int AdjustmentDetailId { get; set; }
         public int AdjustmentId { get; set; }
-        public int ProductId { get; set; }
+        public string ProductId { get; set; }
         [ForeignKey("AdjustmentId")]
         public virtual Adjustment Adjustment { get; set; }
         [ForeignKey("ProductId")]

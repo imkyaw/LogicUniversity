@@ -9,7 +9,7 @@ namespace logicProject.Models.EF
     public class Supplier
     {
         [Key]
-        public int SupplierId { get; set; }
+        public string SupplierId { get; set; }
         public string SupplierName { get; set; }
         public string GSTRegNo { get; set; }
         public string ContactName { get; set; }

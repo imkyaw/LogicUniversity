@@ -11,7 +11,7 @@ namespace logicProject.Models.EF
     {
         [Key]
         public int DisDetailId { get; set; }
-        public int ProductId { get; set; }
+        public string ProductId { get; set; }
         [ForeignKey("ProductId")]
         public virtual Product Product { get; set; }
 

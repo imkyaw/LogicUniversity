@@ -163,6 +163,10 @@
     <Compile Include="Migrations\201907290133234_addProductCategory.Designer.cs">
       <DependentUpon>201907290133234_addProductCategory.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201907290515302_addChanges.cs" />
+    <Compile Include="Migrations\201907290515302_addChanges.Designer.cs">
+      <DependentUpon>201907290515302_addChanges.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\DBContext\LogicEntities.cs" />
     <Compile Include="Models\EF\Adjustment.cs" />
@@ -286,6 +290,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201907290133234_addProductCategory.resx">
       <DependentUpon>201907290133234_addProductCategory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907290515302_addChanges.resx">
+      <DependentUpon>201907290515302_addChanges.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

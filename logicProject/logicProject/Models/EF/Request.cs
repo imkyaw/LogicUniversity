@@ -11,11 +11,12 @@ namespace logicProject.Models.EF
     {
         [Key]
         public int RequestId { get; set; }
+        public string RequestFormId { get; set; }
         public DateTime ReqDate { get; set; }
         public int StaffId { get; set; }
         public string Remark { get; set; }
         public string Status { get; set; }
-        public int DeptId { get; set; }
+        public string DeptId { get; set; }
         [ForeignKey("DeptId")]
         public virtual Department Department { get; set; }
         public virtual ICollection<RequestDisbursementDetail> RequestDisbursementDetail{ get; set; }

@@ -10,7 +10,7 @@ namespace logicProject.Models.EF
     public class Department
     {
         [Key]
-        public int DeptId { get; set; }
+        public string DeptId { get; set; }
         public string DeptName { get; set; }
         public string ContactName { get; set; }
         public string PhNo { get; set; }

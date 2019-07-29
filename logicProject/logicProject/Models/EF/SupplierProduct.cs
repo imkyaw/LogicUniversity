@@ -11,8 +11,8 @@ namespace logicProject.Models.EF
     {
         [Key]
         public int SupplierProductId { get; set; }
-        public int SupplierId { get; set; }
-        public int ProductId { get; set; }
+        public string SupplierId { get; set; }
+        public string ProductId { get; set; }
         [ForeignKey("SupplierId")]
         public virtual Supplier Supplier { get; set; }
         [ForeignKey("ProductId")]

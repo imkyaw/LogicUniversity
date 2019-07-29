@@ -16,8 +16,8 @@ namespace logicProject.Models.EF
         public int StaffId { get; set; }
         public int ReceivedQty { get; set; }
         public string Status { get; set; }
-        public int SuppliertId { get; set; }
-        [ForeignKey("SuppliertId")]
+        public string SupplierId { get; set; }
+        [ForeignKey("SupplierId")]
         public virtual Supplier Supplier { get; set; }
         public virtual ICollection<PurchaseOrderDetail> RequestDetails { get; set; }
     }

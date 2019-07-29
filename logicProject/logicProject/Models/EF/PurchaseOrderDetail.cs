@@ -12,7 +12,7 @@ namespace logicProject.Models.EF
         [Key]
         public int PurchaseOrderDetailId { get; set; }
         public int OrderId { get; set; }
-        public int ProductId { get; set; }
+        public string ProductId { get; set; }
         [ForeignKey("OrderId")]
         public virtual PurchaseOrder Order { get; set; }
         [ForeignKey("ProductId")]
