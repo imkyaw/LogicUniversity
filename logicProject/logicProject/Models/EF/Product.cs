@@ -10,6 +10,7 @@ namespace logicProject.Models.EF
     {
         [Key]
         public int ProductId { get; set; }
+        public string Category { get; set; }
         public string Bin { get; set; }
         public string Unit { get; set; }
         public int Qty { get; set; }
