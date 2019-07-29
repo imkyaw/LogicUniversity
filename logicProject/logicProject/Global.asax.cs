@@ -1,5 +1,8 @@
-﻿using System;
+﻿using logicProject.Models.DBContext;
+using logicProject.Models.EF;
+using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Http;
@@ -18,6 +21,8 @@ namespace logicProject
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+            //Database.SetInitializer<LogicEntities>(new DropCreateDatabaseIfModelChanges<LogicEntities>());
+            
         }
     }
 }

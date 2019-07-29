@@ -1,0 +1,82 @@
+﻿@model logicProject.Models.EF.Department
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Department</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.CollectionPoint.CollectionPt)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CollectionPoint.CollectionPt)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DeptName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DeptName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ContactName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ContactName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PhNo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PhNo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FaxNo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FaxNo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EmailAddr)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EmailAddr)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.HeadId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.HeadId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RepId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RepId)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.DeptId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

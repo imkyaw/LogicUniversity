@@ -22,5 +22,6 @@ namespace logicProject.Models.EF
         public virtual CollectionPoint CollectionPoint { get; set; }
         public int RepId { get; set; }
         public virtual ICollection<Request> Requests { get; set; }
+        public virtual ICollection<DepartmentStaff> DepartmentStaffs { get; set; }
     }
 }

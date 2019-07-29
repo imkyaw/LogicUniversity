@@ -13,6 +13,7 @@ namespace logicProject.Models.EF
         public string StaffName { get; set; }
         public string StaffEmail { get; set; }
         public string StaffType { get; set; }
-
+        public string Username { get; set; }
+        public string Password { get; set; }
     }
 }

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using logicProject.Models.DBContext;
+using logicProject.Models.EF;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -10,6 +12,7 @@ namespace logicProject.Controllers
     {
         public ActionResult Index()
         {
+            
             return View();
         }
 
