@@ -1,0 +1,188 @@
+﻿@{
+    ViewBag.Title = "RequestForm";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    select{
+        width:500px;
+    }
+</style>
+<h2>RequestForm</h2>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/css/select2.min.css" rel="stylesheet" />
+
+<input type="button" id="add-row" value="Add Row">
+<button type="button" class="delete-row">Delete Row</button>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Category</th>
+            <th>Product</th>
+            <th>Qty</th>
+        </tr>
+    </thead>
+    <tbody id="tbody_id">
+        <tr>
+            <td><input type="checkbox" name="record"></td>
+            <td>
+                <select class="productcategory" id="productcategory0"></select>
+            </td>
+            <td>
+                <select class="products" id="products0"></select>
+            </td>
+            <td>
+                <input type="button" value="+" name="add" class="add" id="add0">
+                <input type="text" name="qty0" value="0" class="col-md-4 qty" id="qty0" />
+                <input type="button" value="-" name="minus" class="add" id="add0">
+            </td>
+
+        </tr>
+    </tbody>
+</table>
+<input type="button" value="Submit" onclick="SubmitToDb()"/>
+<script src="https://code.jquery.com/jquery-3.4.1.js"
+        integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+        crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js"></script>
+<script>
+    //
+    function PopulateQty(){
+        let count = 1,
+            divs = document.getElementsByClassName("add");
+        for (var k = 0; k < divs.length; k++) {
+            divs[k].addEventListener("click", function (e) {
+                e.preventDefault();
+                var id = this.id;
+                id = id.replace("add", "");
+
+                var d = document.getElementById("qty" + id).value;
+                var a = this.name;
+
+                if (a == "add") {
+                    var val = parseInt(d) + 1;
+                } else {
+                    if (d > 0)
+                        var val = parseInt(d) - 1;
+                    else
+                        var val = 0;
+                }
+                document.getElementById("qty" + id).value = val;
+                /* Here, "this" refers to 1st div */
+            });
+        }
+    }
+
+    //
+    let add = document.getElementById("add-row");
+    let i = 0;
+    let products;
+    let qty;
+    let tbody = document.getElementById("tbody_id");
+
+    add.addEventListener("click", function (e) {
+        e.preventDefault();
+        i++;
+        var addtr = "<tr><td> <input type='checkbox' name='record'></td><td><select class='productcategory' id='productcategory" + i + "'></select></td><td><select class='products' id='products" + i + "'></select></td><td><input type='button' value='+' name='add' class='add' id='add"+i+"'/><input type = 'text' name = 'qty"+i+"' value='0' class='col-md-4 qty' id = 'qty"+i+"' /><input type='button' value='-' name='minus' class='add' id='add"+i+"' /></td></tr>";
+        $('table tbody').append(addtr);
+        getData();
+        $(".products").select2();
+        PopulateQty();
+    });
+    $(".delete-row").click(function () {
+        $("table tbody").find('input[name="record"]').each(function () {
+            if ($(this).is(":checked")) {
+                $(this).parents("tr").remove();
+            }
+        });
+        alert($("#totalProducts").val());
+    });
+    //
+    function getData() {
+        $(".productcategory").select2({
+            placeholder: "select product",
+            ajax: {
+                type: "GET",
+                url: "/Request/SearchCategory",
+                success: console.log("success"),
+                dataType: "json",
+                data: function (params) {
+                    return {
+                        searchTerm: params.term
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: data
+                    };
+                }
+            }
+        });
+
+        $('.productcategory').on('select2:select', function (e) {
+            var id = this.id;
+            id = id.replace("productcategory", "");
+            var d = e.params.data;
+            $.ajax({
+                url: "/Request/SearchProduct?category=" + d.text,
+                dataType: 'json',
+                type: "GET",
+                success: function (products) {
+                    $("#products" + id).html("");
+                    //$("#Products").append($('<option></option>').val(null));
+                    // clear before appending new list 
+                    $.each(products, function (i, product) {
+                        $("#products" + id).append(
+                            $('<option></option>').val(product).html(product));
+                    });
+                }
+            });
+        });
+    }
+    $(document).ready(function () {
+        $(".products").select2();
+        getData();
+        PopulateQty();
+    });
+
+    function SubmitToDb() {
+        let products = "",
+            qty = "";
+        let productId = document.getElementsByClassName("products");
+        let QtyTextBox = document.getElementsByClassName("qty");
+        for (let i = 0; i < productId.length; i++) {
+            var id = productId[i].id;
+            id = id.replace("products", "");
+            console.log(productId[i].value);
+            console.log(QtyTextBox[i].value);
+            if (products != "")
+                products = products + "," + productId[i].value;
+            else
+                products = products + productId[i].value;
+            if (qty != "")
+                qty = qty + "," + QtyTextBox[i].value;
+            else
+                qty = qty + QtyTextBox[i].value;
+
+            //var val = parseInt(productId[i].value);
+
+        }
+        var xmlHttp = new XMLHttpRequest();
+
+        xmlHttp.open("post", "CreateRequest?products=" + products + "&qty=" + qty, true);
+        console.log(xmlHttp.timeout);
+        xmlHttp.send();
+        xmlHttp.onreadystatechange = function () {
+            if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+                //alert("Successful on checkout");
+                window.location.href = "OrderStatus";
+            } else {
+                //alert("Successful on checkout");
+                //window.location.href = "OrderStatus";
+            }
+        }
+    }
+    
+</script>
+
