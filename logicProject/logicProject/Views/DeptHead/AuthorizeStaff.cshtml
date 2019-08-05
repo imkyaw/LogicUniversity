@@ -5,34 +5,6 @@
 
 <h2>AuthorizeStaff</h2>
 
-@*<style>
-        .submitBtn {
-            background-color: #008EEC; /* BLUE */
-            border: none;
-            color: white;
-            padding: 8px 16px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            margin: 4px 2px;
-            -webkit-transition-duration: 0.4s; /* Safari */
-            transition-duration: 0.4s;
-            cursor: pointer;
-            border-radius: 4px;
-            float: right;
-        }
-
-            .submitBtn:hover {
-                background-color: #73C2FB;
-                color: white;
-            }
-
-        .text-box single-line {
-            width: 100%;
-        }
-    </style>*@
-@* Product List *@
 <div class="modal fade" id="modal-default">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -102,13 +74,25 @@
 
 
 <script>
+    
+
+    $("#StartDate").datepicker({
+        onSelect: function () {
+            var startDateObj = $(this).datepicker('getStartDate');
+            success: console.log(startDateObj)
+        }
+    });
+
+    $("#EndDate").datepicker({
+        onSelect: function () {
+            var endDateObj = $(this).datepicker('getEndDate');
+            success: console.log(endDateObj)
+        }
+    });
+
     $(document).ready(function () {
-        $("#StartDate,#EndDate").datepicker({
-            dateFormat: 'dd/mm/yy',
-            autoclose: true,
-            todayHighlight: true,
-            orientation: "bottom auto"
-        });
+       
+
         $(".StaffName").select2({
             placeholder: "Search Employee Name",
             theme: "classic",

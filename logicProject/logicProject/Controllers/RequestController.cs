@@ -94,11 +94,11 @@ namespace logicProject.Controllers
             Department d = db.Department.Where(x => x.DeptId == DeptId).SingleOrDefault();
             d.CollectionPt = locationId;
             db.SaveChanges();
-            return RedirectToAction("");
+            return RedirectToAction("Dashboard","Department");
         }
 
         //Wei Sheng Part end here
-        //Aprrove Or Reject - Habinta Part
+        //Aprrove Or Reject - Harbinder Part
         [HttpGet]
         public ActionResult RequestApproval(int requestId)
         {

@@ -9,6 +9,7 @@ namespace logicProject.Controllers
     public class StoreController : Controller
     {
         // GET: Store
+        [Filter.StoreAuthorize]
         public ActionResult Dashboard()
         {
             return View();

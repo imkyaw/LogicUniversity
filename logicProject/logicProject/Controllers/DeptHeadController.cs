@@ -37,7 +37,7 @@ namespace logicProject.Controllers
         }
 
         [HttpPost]
-        public ActionResult AppointStaff(string staffname)
+        public ActionResult AppointRep(string staffname)
         {
             var result = db.DepartmentStaff.SingleOrDefault(x => x.StaffName == staffname);
 
