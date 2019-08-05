@@ -1,0 +1,52 @@
+﻿@using logicProject.Models.EF
+@model IEnumerable<logicProject.Models.ViewModel.RequestViewModel>
+
+@{
+    ViewBag.Title = "ViewRequestDetails";
+    Request req = ViewData["request"] as Request;
+}
+
+<p>
+    FormId: @req.RequestFormId
+</p>
+<p>Order Status: @req.Status</p>
+<div class="box">
+    <table class="table table-responsive">
+
+        <tr>
+
+            <th>
+                Category
+            </th>
+            <th>
+                Description
+            </th>
+            <th>
+                Unit
+            </th>
+            <th>
+                Quantity
+            </th>
+
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+
+                <th>
+                    @Html.DisplayFor(modelItem => item.products.Category)
+                </th>
+                <th>
+                    @Html.DisplayFor(modelItem => item.products.Description)
+                </th>
+                <th>
+                    @Html.DisplayFor(modelItem => item.products.Unit)
+                </th>
+                <th>
+                    @Html.DisplayFor(modelItem => item.requestDetails.ReqQty)
+                </th>
+            </tr>
+        }
+    </table>
+</div>
+<button onclick="goBack()">Back to List</button>

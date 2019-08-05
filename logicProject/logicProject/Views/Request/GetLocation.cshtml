@@ -1,0 +1,51 @@
+﻿@model IEnumerable<logicProject.Models.EF.CollectionPoint>
+
+@{
+    ViewBag.Title = "Location";
+}
+@using (Html.BeginForm())
+{
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('input:checkbox').click(function () {
+                $('input:checkbox').not(this).prop('checked', false);
+                let id = $(this).val();
+                $('#locationId').val(id);
+                
+            });
+        });
+    </script>
+
+    <h2>Select Collection Point</h2>
+    <br />
+    <input type="hidden" id="locationId" name="locationId"/>
+    <table class="table table-responsive">
+        <tr>
+            <th>
+                Collection Point
+            </th>
+            <th>
+                Time
+            </th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <th>
+                    <input type="checkbox" name="point" value="@item.CollectionPtId">
+                    @Html.DisplayFor(modelItem => item.CollectionPt)
+                </th>
+                <th>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </th>
+            </tr>
+        }
+
+
+        @*HAVENT TRANSFER VALUE TO DATABASE*@
+    </table>
+    <input type="submit" name="id" value="Save" />
+    <br />
+}

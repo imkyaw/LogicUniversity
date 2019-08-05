@@ -1,0 +1,158 @@
+﻿@model logicProject.Models.EF.Authorization
+@{
+    ViewBag.Title = "AuthorizeStaff";
+}
+
+<h2>AuthorizeStaff</h2>
+
+@*<style>
+        .submitBtn {
+            background-color: #008EEC; /* BLUE */
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            -webkit-transition-duration: 0.4s; /* Safari */
+            transition-duration: 0.4s;
+            cursor: pointer;
+            border-radius: 4px;
+            float: right;
+        }
+
+            .submitBtn:hover {
+                background-color: #73C2FB;
+                color: white;
+            }
+
+        .text-box single-line {
+            width: 100%;
+        }
+    </style>*@
+@* Product List *@
+<div class="modal fade" id="modal-default">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Default Modal</h4>
+            </div>
+            <div class="modal-body">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Product Code</th>
+                            <th>Category</th>
+                            <th>Description</th>
+                            <th>Unit Of Measure</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+@* Product List *@
+<div>
+    <div style="float: left; width: 40%">
+        <select class="StaffName" name="staffname" style="width:100%"></select>
+        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal-default">
+            Product List
+        </button>
+
+        <div class="row">
+            <div class="form-group col-md-6">
+                <label>Start Date:</label>
+                <div class="input-group date">
+                    <div class="input-group-addon">
+                        <i class="fa fa-calendar"></i>
+                    </div>
+                    @Html.EditorFor(model => model.StartDate, new { id = "StartDate" })
+                </div>
+                <!-- /.input group -->
+            </div>
+            <div class="form-group col-md-6">
+                <label>End Date:</label>
+                <div class="input-group date">
+                    <div class="input-group-addon">
+                        <i class="fa fa-calendar"></i>
+                    </div>
+                    @Html.EditorFor(model => model.EndDate, new { id = "EndDate" })
+                </div>
+                <!-- /.input group -->
+            </div>
+        </div>
+
+        <br />
+        <input type="submit" value="Submit" class="submitBtn" />
+    </div>
+</div>
+
+
+
+<script>
+    $(document).ready(function () {
+        $("#StartDate,#EndDate").datepicker({
+            dateFormat: 'dd/mm/yy',
+            autoclose: true,
+            todayHighlight: true,
+            orientation: "bottom auto"
+        });
+        $(".StaffName").select2({
+            placeholder: "Search Employee Name",
+            theme: "classic",
+            ajax: {
+                type: "GET",
+                url: "/DeptHead/GetStaffList",
+                success: console.log("success"),
+                dataType: "json",
+                data: function (params) {
+                    return {
+                        searchTerm: params.term
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: $.map(data, function (obj) {
+                            return {
+                                id: obj.id,
+                                text: obj.text
+                            }
+                        })
+                    };
+                }
+            }
+        });
+
+        $(".submitBtn").click(function () {
+            let selected = $(".StaffName option:selected").text();
+            let startDate = $("#StartDate").val();
+            let endDate = $("#EndDate").val();
+            $.ajax(
+                {
+                    url: "/DeptHead/AppointStaff?staffname=" + selected + "&getStartDate=" + startDate + "&getEndDate=" + endDate,
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    type: 'POST',
+                    success: function (data) {
+                        alert("Authorization Successful");
+                    },
+                });
+        })
+    });
+
+
+
+</script>
+

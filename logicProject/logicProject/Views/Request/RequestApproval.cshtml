@@ -1,0 +1,39 @@
+﻿@using logicProject.Models.EF
+@{
+    ViewBag.Title = "RequestApproval";
+    Request reqId = ViewData["request"] as Request;
+}
+
+<h2>RequestApproval</h2>
+@using (Html.BeginForm("RequestApproval", "Request", FormMethod.Post))
+{
+<div class="box">
+    <table class="table table-responsive">
+        <tr>
+            <th>Description</th>
+            <th>Quantity</th>
+            <th>Unit of Measure</th>
+        </tr>
+        @foreach (var a in Model)
+        {
+            <tr>
+                <td>@a.Product.Description</td>
+                <td>@a.ReqQty</td>
+                <td>@a.Product.Unit</td>
+            </tr>
+        }
+    </table>
+    @* Based on Session User type *@
+    @{ if (reqId.Status == "Pending")
+        {
+    <input type="hidden" name="id" value="@reqId.RequestId" />
+    <p>Remarks:@Html.TextArea("remarks", null, new { @class = "form-control" })</p>
+    <input type="submit" name="approve" value="Approve" class="btn btn btn-bitbucket" />
+    <input type="submit" name="reject" value="Reject" class="btn btn-pinterest" />
+            }
+        }
+</div>
+}
+
+
+

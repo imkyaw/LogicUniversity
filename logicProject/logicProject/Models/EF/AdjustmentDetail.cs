@@ -19,5 +19,7 @@ namespace logicProject.Models.EF
         public virtual Product Product { get; set; }
         public int Qty { get; set; }
         public string reason { get; set; }
+        public double UnitPrice { get; set; }
+        public double TotalPrice { get; set; }
     }
 }

@@ -4,49 +4,49 @@
     ViewBag.Title = "OrderStatus";
 }
 
-<h2>OrderStatus</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
-<table class="table">
-    <tr>
-        <th>
-            Department Name
-        </th>
-        <th>
-            Request Date
-        </th>
-        <th>
-            Request ID
-        </th>
-        <th>
-            Status
-        </th>
-        <th></th>
-    </tr>
+<div class="box">
+    <table class="table table-responsive no-padding">
+        <tr>
+            <th>
+                Department Name
+            </th>
+            <th>
+                Request Date
+            </th>
+            <th>
+                Request ID
+            </th>
+            <th>
+                Status
+            </th>
+            <th></th>
+        </tr>
 
-@foreach (var item in Model)
-{
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Department.DeptName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ReqDate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.RequestId)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Status)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.RequestId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.RequestId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.RequestId })
-        </td>
-    </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Department.DeptName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReqDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RequestId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    @Html.ActionLink("Approve?", "RequestApproval", new { requestId = item.RequestId }) |
+                    @Html.ActionLink("Details", "ViewRequestDetails", new { requestId = item.RequestId }) |
+                </td>
+            </tr>
+        }
 
-</table>
+    </table>
+</div>

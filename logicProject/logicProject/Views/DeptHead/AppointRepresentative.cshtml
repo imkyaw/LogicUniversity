@@ -1,0 +1,84 @@
+﻿
+@{
+    ViewBag.Title = "AppointRepresentative";
+}
+
+<h2>Appoint Representative</h2>
+
+<style>
+    .submitBtn {
+        background-color: #008EEC; /* BLUE */
+        border: none;
+        color: white;
+        padding: 8px 16px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        -webkit-transition-duration: 0.4s; /* Safari */
+        transition-duration: 0.4s;
+        cursor: pointer;
+        border-radius: 4px;
+        float: right;
+    }
+
+        .submitBtn:hover {
+            background-color: #73C2FB;
+            color: white;
+        }
+</style>
+
+<div>
+    <div style="float: left; width: 40%">
+        <select class="StaffName" name="staffname" style="width:100%"></select>
+        <br />
+        <br />
+        <input type="submit" value="Submit" class="submitBtn" />
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $(".StaffName").select2({
+            placeholder: "Search Employee Name",
+            theme: "classic",
+            ajax: {
+                type: "GET",
+                url: "/DeptHead/GetStaffList",
+                success: console.log("success"),
+                dataType: "json",
+                data: function (params) {
+                    return {
+                        searchTerm: params.term
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: $.map(data, function (obj) {
+                            return {
+                                id: obj.id,
+                                text: obj.text
+                            }
+                        })
+                    };
+                }
+            }
+        });
+        $(".submitBtn").click(function () {
+            let selected = $(".StaffName option:selected").text();
+            $.ajax(
+                {
+                    url: "/DeptHead/AppointStaff?staffname=" + selected,
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    type: 'POST',
+                    success: function (data) {
+                        alert("Appointment Successful");
+                    },
+                });
+        })
+
+    });
+</script>
+
