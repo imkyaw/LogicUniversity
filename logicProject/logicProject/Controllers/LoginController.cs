@@ -64,6 +64,27 @@ namespace logicProject.Controllers
             Session["DeptStaff"] = user;
             return RedirectToAction("Dashboard", "Departments");
         }
+        public JsonResult DepartmentLoginApi(string username, string password)
+        {
+            if (username == null || password == null)
+            {
+                return Json(new { isok = false, message = "Login Unsuccessful" });
+            }
+            DepartmentStaff user = db.DepartmentStaff.Where(x => x.Username == username && x.Password == password).SingleOrDefault();
+            string sessionId = Guid.NewGuid().ToString();
+            if (user == null)
+            {
+                return Json(new { isok = false, message = "Login Unsuccessful" });
+            }
+            if (user != null)
+            {
+                user.SessionId = sessionId;
+                db.SaveChanges();
+            }
+            Session["DeptSession"] = sessionId;
+            Session["DeptStaff"] = user;
+            return Json(new { isok = true, message = "Login Successful" });
+        }
         public ActionResult Logout(string type)
         {
               
@@ -73,6 +94,7 @@ namespace logicProject.Controllers
                 DepartmentStaff ds = db.DepartmentStaff.Where(x => x.SessionId == session).SingleOrDefault();
                 ds.SessionId = null;
                 Session.Remove("DeptSession");
+                Session.Remove("DeptStaff");
                 db.SaveChanges();
                 return RedirectToAction("DepartmentLogin");
             }
@@ -82,6 +104,7 @@ namespace logicProject.Controllers
                 StoreStaff ss = db.StoreStaff.Where(x => x.SessionId == session).SingleOrDefault();
                 ss.SessionId = null;
                 Session.Remove("StoreSession");
+                Session.Remove("StoreStaff");
                 db.SaveChanges();
                 return RedirectToAction("StoreLogin");
             }

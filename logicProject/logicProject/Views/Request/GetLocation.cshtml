@@ -3,8 +3,7 @@
 @{
     ViewBag.Title = "Location";
 }
-@using (Html.BeginForm())
-{
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script>
         $(document).ready(function () {
@@ -14,6 +13,20 @@
                 $('#locationId').val(id);
                 
             });
+            $('#submitbtn').click(function () {
+                let selected = $("#locationId").val();
+                $.ajax(
+                    {
+                        url: "/Request/GetLocationAsync?locationId=" + selected,
+                        contentType: 'application/json',
+                        dataType: 'json',
+                        type: 'POST',
+                        success: function (data) {
+                            alert(data.message);
+                            window.location.href=data.redirect;
+                        },
+                    });
+            })
         });
     </script>
 
@@ -33,19 +46,17 @@
         @foreach (var item in Model)
         {
             <tr>
-                <th>
+                <td>
                     <input type="checkbox" name="point" value="@item.CollectionPtId">
                     @Html.DisplayFor(modelItem => item.CollectionPt)
-                </th>
-                <th>
+                </td>
+                <td>
                     @Html.DisplayFor(modelItem => item.Description)
-                </th>
+                </td>
             </tr>
         }
 
-
-        @*HAVENT TRANSFER VALUE TO DATABASE*@
     </table>
-    <input type="submit" name="id" value="Save" />
+    <input type="submit" name="id" id="submitbtn" value="Save" />
     <br />
-}
+

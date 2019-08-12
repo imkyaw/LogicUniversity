@@ -8,6 +8,9 @@ using System.Data.Entity;
 using logicProject.Models.ViewModel;
 using logicProject.Models.DAO;
 using logicProject.Models.EF;
+using System.Web.Helpers;
+using System.Web.Security;
+using logicProject.Filter;
 
 namespace logicProject.Controllers
 {
@@ -15,12 +18,14 @@ namespace logicProject.Controllers
     {
         private LogicEntities db = new LogicEntities();
         // GET: Request
+        [Custom(Roles = "head")]
         public ActionResult OrderStatus()
         {
             string a = Session["StoreSession"] as string;
             var request = db.Request.Include(d => d.Department);
             ViewData["header"] = "Order Status";
             return View(request.ToList());
+            
         }
         public ActionResult RequestForm()
         {
@@ -79,22 +84,37 @@ namespace logicProject.Controllers
 
         }
         [HttpGet]
+        [Custom(Roles = "All")]
         public ActionResult GetLocation()
         {
             return View(db.CollectionPoint);
         }
-
-        //My Part
-        [HttpPost]
-        public ActionResult GetLocation(int locationId)
+        [HttpGet]
+        public JsonResult GetLocationApi()
         {
-            //session Id or staff Id
-            int staffId = 6;
-            string DeptId = db.DepartmentStaff.Where(x => x.StaffId == staffId).Select(x => x.DeptId).SingleOrDefault();
+            var list = db.CollectionPoint.ToList();
+            var modifiedData = list.Select(x => new
+            {
+                id=x.CollectionPtId,
+                name = x.CollectionPt,
+                text = x.Description
+            });
+            return Json(modifiedData, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public async System.Threading.Tasks.Task<ActionResult> GetLocationAsync(int locationId)
+        {
+            //DepartmentStaff ds = Session["DeptStaff"] as DepartmentStaff;
+            int StaffId = 6;
+            string DeptId = db.DepartmentStaff.Where(x => x.StaffId == StaffId).Select(x => x.DeptId).SingleOrDefault();
             Department d = db.Department.Where(x => x.DeptId == DeptId).SingleOrDefault();
             d.CollectionPt = locationId;
             db.SaveChanges();
-            return RedirectToAction("Dashboard","Department");
+            Utility.EmailService e = new Utility.EmailService();
+            await e.SendEmailAsync("kyawsithungalay@gmail.com", "hello", "das");
+
+            return Json(new { isok = true, message = "Collection Point is set.",redirect="/Departments/Dashboard" });
         }
 
         //Wei Sheng Part end here
