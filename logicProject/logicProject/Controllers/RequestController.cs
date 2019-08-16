@@ -18,11 +18,29 @@ namespace logicProject.Controllers
     {
         private LogicEntities db = new LogicEntities();
         // GET: Request
-        [Custom(Roles = "head")]
+        [Custom(Roles = "All")]
         public ActionResult OrderStatus()
         {
-            string a = Session["StoreSession"] as string;
+            DepartmentStaff a = Session["DeptStaff"] as DepartmentStaff;
+            String temp = Convert.ToBoolean(Session["TempHead"]).ToString();
+            String check= Convert.ToBoolean(Session["CheckHead"]).ToString();
+            ViewData["ApproveOrNot"] = null;
             var request = db.Request.Include(d => d.Department);
+            if (a.StaffType == "head")
+            {
+                ViewData["ApproveOrNot"] = true;
+            }else if(a.StaffType!="head" && temp=="True")
+            {
+                ViewData["ApproveOrNot"] = true;
+            }
+            else
+            {
+                request = request.Where(x => x.StaffId == a.StaffId).Include(d=>d.Department);
+            }
+            if (a.StaffType == "head" && check == "True")
+            {
+                ViewData["ApproveOrNot"] = null;
+            }
             ViewData["header"] = "Order Status";
             return View(request.ToList());
             
@@ -51,16 +69,23 @@ namespace logicProject.Controllers
            
             return Json(modifiedData, JsonRequestBehavior.AllowGet);
         }
-        public ActionResult CreateRequest(string products,string qty)
+        public ActionResult CreateRequest(string products,string qty,string save)
         {
-            
-            int id = 6;
+            DepartmentStaff a = Session["DeptStaff"] as DepartmentStaff;
             if (products != "" && ModelState.IsValid)
             {
-                RequestDAO.AddRequest(products, qty, id);
+                RequestDAO.AddRequest(products, qty, a.StaffId,save);
                 return RedirectToAction("OrderStatus","Request");
             }
             return RedirectToAction("OrderStatus", "Request");
+        }
+
+        //Save Request
+        public ActionResult ViewFavRequest()
+        {
+            DepartmentStaff a = Session["DeptStaff"] as DepartmentStaff;
+            List<Request> list = db.Request.Where(x => x.FavRequest == true).ToList();
+            return View();
         }
 
         //View Request Details - Wei Sheng part
@@ -78,15 +103,19 @@ namespace logicProject.Controllers
                               products = p
                           };
             Request req = db.Request.Where(x=>x.RequestId==requestId).SingleOrDefault();
+            String name = db.DepartmentStaff.Where(x => x.StaffId == req.StaffId).Select(x => x.StaffName).FirstOrDefault();
+            ViewData["staff"] = name;
             ViewData["request"] = req;
             return View(request);
-
-
         }
+
         [HttpGet]
         [Custom(Roles = "All")]
         public ActionResult GetLocation()
         {
+            DepartmentStaff a = Session["DeptStaff"] as DepartmentStaff;
+            var c = db.Department.Where(x => x.DeptId == a.DeptId).FirstOrDefault();
+            ViewData["collectionPoint"] = c.CollectionPt;
             return View(db.CollectionPoint);
         }
         [HttpGet]
@@ -103,20 +132,35 @@ namespace logicProject.Controllers
         }
 
         [HttpPost]
-        public async System.Threading.Tasks.Task<ActionResult> GetLocationAsync(int locationId)
+        public ActionResult GetLocationAsync(int locationId)
         {
-            //DepartmentStaff ds = Session["DeptStaff"] as DepartmentStaff;
-            int StaffId = 6;
-            string DeptId = db.DepartmentStaff.Where(x => x.StaffId == StaffId).Select(x => x.DeptId).SingleOrDefault();
+            DepartmentStaff ds = Session["DeptStaff"] as DepartmentStaff;
+            string DeptId = ds.DeptId;
             Department d = db.Department.Where(x => x.DeptId == DeptId).SingleOrDefault();
             d.CollectionPt = locationId;
             db.SaveChanges();
-            Utility.EmailService e = new Utility.EmailService();
-            await e.SendEmailAsync("kyawsithungalay@gmail.com", "hello", "das");
-
-            return Json(new { isok = true, message = "Collection Point is set.",redirect="/Departments/Dashboard" });
+            List<String> list = db.StoreStaff.Select(x=>x.StaffEmail).ToList();
+            string message = Utility.EmailBody.CollectionSubject + "\n" + "By " + d.DeptName;
+            Utility.EmailService.SendEmail(list,Utility.EmailBody.CollectionSubject,message);
+            //await e.SendEmailAsync("kyawsithungalay@gmail.com", "hello", "das");
+            
+            return Json(new { isok = true, message = "Collection Point is set.",redirect="/Departments/Dashboard",locationId=locationId });
         }
-
+        [HttpPost]
+        public ActionResult PostLocationApi(int locationId,int staffId)
+        {
+            //DepartmentStaff ds = Session["DeptStaff"] as DepartmentStaff;
+            DepartmentStaff ds = db.DepartmentStaff.Where(x => x.StaffId == staffId).FirstOrDefault();
+            string DeptId = ds.DeptId;
+            Department d = db.Department.Where(x => x.DeptId == DeptId).SingleOrDefault();
+            d.CollectionPt = locationId;
+            db.SaveChanges();
+            List<String> list = db.StoreStaff.Select(x => x.StaffEmail).ToList();
+            string message = Utility.EmailBody.CollectionBody + "\n" + "By " + d.DeptName;
+            Utility.EmailService.SendEmail(list, Utility.EmailBody.CollectionSubject, message);
+            
+            return Json(new { isok = true, message = "Collection Point is set." });
+        }
         //Wei Sheng Part end here
         //Aprrove Or Reject - Harbinder Part
         [HttpGet]
@@ -124,6 +168,8 @@ namespace logicProject.Controllers
         {
             List<RequestDetail> list = db.RequestDetail.Where(a => a.Request.RequestId.Equals(requestId)).ToList();
             Request req = db.Request.Where(x => x.RequestId == requestId).SingleOrDefault();
+            String name = db.DepartmentStaff.Where(x => x.StaffId == req.StaffId).Select(x => x.StaffName).FirstOrDefault();
+            ViewData["staff"] = name;
             ViewData["request"] = req;
             return View(list);
         }

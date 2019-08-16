@@ -14,6 +14,7 @@ namespace logicProject.Models.EF
         public DateTime TranDate { get; set; }
         public int Qty { get; set; }
         public int TotalBalance { get; set; }
+        public string Remarks { get; set; }
         public string ProductId { get; set; }
         [ForeignKey("ProductId")]
         public virtual Product Product { get; set; }

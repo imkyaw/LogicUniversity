@@ -11,50 +11,29 @@ namespace logicProject.Utility
 {
     public class EmailService
     {
-        public async Task<bool> SendEmailAsync(string emailTo, string mailbody, string subject)
+        public static void SendEmail(List<string> addresses, string subject = "", string message = "")
         {
-            var from = new MailAddress("testing1496@gmail.com");
-            var to = new MailAddress(emailTo);
+            string email = "testing1496@gmail.com";
+            string password = "Team8@logic$21";
 
-            var useDefaultCredentials = true;
-            var enableSsl = false;
-            //var replyto = ""; // set here your email; 
-            var userName = string.Empty;
-            var password = string.Empty;
-            var port = 25;
-            var host = "localhost";
+            var loginInfo = new System.Net.NetworkCredential(email, password);
+            var msg = new MailMessage();
+            var smtpClient = new SmtpClient("smtp.gmail.com", 587);
 
-            userName = "testing1496@gmail.com"; // setup here the username; 
-            password = "passwordlogic"; // setup here the password; 
-            bool.TryParse("true", out useDefaultCredentials); //setup here if it uses defaault credentials 
-            bool.TryParse("true", out enableSsl); //setup here if it uses ssl 
-            int.TryParse("587", out port); //setup here the port 
-            host = "smtp.gmail.com"; //setup here the host 
-
-            using (var mail = new MailMessage())
+            msg.From = new MailAddress(email);
+            foreach(string a in addresses)
             {
-                mail.To.Add(to);
-                mail.Subject = subject;
-                mail.Body = mailbody;
-                mail.IsBodyHtml = true;
-
-                //mail.ReplyToList.Add(new MailAddress(replyto, "My Email"));
-                //mail.ReplyToList.Add(from);
-                //mail.DeliveryNotificationOptions = DeliveryNotificationOptions.Delay |
-                //                                   DeliveryNotificationOptions.OnFailure |
-                //                                   DeliveryNotificationOptions.OnSuccess;
-
-                using (var client = new SmtpClient())
-                {
-                    //client.Host = host;
-                    //client.EnableSsl = enableSsl;
-                    //client.Port = port;
-                    //client.Credentials = new NetworkCredential(userName, password);
-                    await client.SendMailAsync(mail);
-                }
+                msg.To.Add(new MailAddress(a));
             }
+            
+            msg.Subject = subject;
+            msg.Body = message;
+            msg.IsBodyHtml = true;
 
-            return true;
+            smtpClient.EnableSsl = true;
+            smtpClient.UseDefaultCredentials = true;
+            smtpClient.Credentials = loginInfo;
+            smtpClient.Send(msg);
         }
     }
 }

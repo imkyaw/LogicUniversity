@@ -17,6 +17,7 @@ namespace logicProject.Models.EF
         public string Remark { get; set; }
         public string Status { get; set; }
         public string DeptId { get; set; }
+        public bool? FavRequest { get; set; }
         [ForeignKey("DeptId")]
         public virtual Department Department { get; set; }
         public virtual ICollection<RequestDisbursementDetail> RequestDisbursementDetail{ get; set; }

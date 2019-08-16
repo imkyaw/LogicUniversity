@@ -4,12 +4,14 @@
 @{
     ViewBag.Title = "ViewRequestDetails";
     Request req = ViewData["request"] as Request;
+    var staff = ViewData["staff"];
 }
 
 <p>
     FormId: @req.RequestFormId
 </p>
 <p>Order Status: @req.Status</p>
+<p>Requested by: @staff</p>
 <div class="box">
     <table class="table table-responsive">
 
@@ -49,4 +51,7 @@
         }
     </table>
 </div>
-<button onclick="goBack()">Back to List</button>
+<label>Remark:</label>
+<textarea class="form-control" 
+            cols="20" disabled>@req.Remark</textarea>
+<a href="/Request/OrderStatus">Back to List</a>

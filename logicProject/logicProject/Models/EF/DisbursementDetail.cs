@@ -16,7 +16,8 @@ namespace logicProject.Models.EF
         public virtual Product Product { get; set; }
 
         public int ReceivedQty { get; set; }
-
+        public int RequiredQty { get; set; }
+        public string Remarks { get; set; }
         public int DisId { get; set; }
         [ForeignKey("DisId")]
         public virtual Disbursement Disbursement { get; set; }

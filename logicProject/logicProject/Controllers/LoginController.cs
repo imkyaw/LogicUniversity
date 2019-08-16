@@ -50,6 +50,10 @@ namespace logicProject.Controllers
             if (username == null || password == null)
                 return View();
             DepartmentStaff user = db.DepartmentStaff.Where(x => x.Username == username && x.Password == password).SingleOrDefault();
+            DateTime today = DateTime.Now;
+            int deptId = int.Parse(user.DeptId);
+            Authorization authorization = db.Authorization.Where(x => x.StaffId == user.StaffId && x.StartDate<=today && x.EndDate>=today).FirstOrDefault();
+            Authorization checkHead = db.Authorization.Where(x=>x.DeptId==deptId && x.StartDate <= today && x.EndDate >= today).FirstOrDefault();
             string sessionId = Guid.NewGuid().ToString();
             if (user == null)
             {
@@ -62,8 +66,17 @@ namespace logicProject.Controllers
             }
             Session["DeptSession"] = sessionId;
             Session["DeptStaff"] = user;
+            Session["TempHead"] = false;
+            Session["CheckHead"] = false;
+            if (checkHead != null)
+                Session["CheckHead"] = true;
+            if (authorization != null)
+            {
+                Session["TempHead"] = true;
+            }
             return RedirectToAction("Dashboard", "Departments");
         }
+
         public JsonResult DepartmentLoginApi(string username, string password)
         {
             if (username == null || password == null)
@@ -71,19 +84,17 @@ namespace logicProject.Controllers
                 return Json(new { isok = false, message = "Login Unsuccessful" });
             }
             DepartmentStaff user = db.DepartmentStaff.Where(x => x.Username == username && x.Password == password).SingleOrDefault();
-            string sessionId = Guid.NewGuid().ToString();
+            //string sessionId = Guid.NewGuid().ToString();
             if (user == null)
             {
                 return Json(new { isok = false, message = "Login Unsuccessful" });
             }
-            if (user != null)
-            {
-                user.SessionId = sessionId;
-                db.SaveChanges();
-            }
-            Session["DeptSession"] = sessionId;
-            Session["DeptStaff"] = user;
-            return Json(new { isok = true, message = "Login Successful" });
+            //if (user != null)
+            //{
+            //    user.SessionId = sessionId;
+            //    db.SaveChanges();
+            //}
+            return Json(new { isok = true, message = "Login Successful",Id=user.StaffId });
         }
         public ActionResult Logout(string type)
         {
@@ -95,6 +106,7 @@ namespace logicProject.Controllers
                 ds.SessionId = null;
                 Session.Remove("DeptSession");
                 Session.Remove("DeptStaff");
+                Session.Remove("TempHead");
                 db.SaveChanges();
                 return RedirectToAction("DepartmentLogin");
             }

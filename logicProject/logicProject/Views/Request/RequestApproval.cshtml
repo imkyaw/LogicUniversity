@@ -2,9 +2,11 @@
 @{
     ViewBag.Title = "RequestApproval";
     Request reqId = ViewData["request"] as Request;
+    var staff = ViewData["staff"];
 }
 
 <h2>RequestApproval</h2>
+<p>Requested by: @staff</p>
 @using (Html.BeginForm("RequestApproval", "Request", FormMethod.Post))
 {
 <div class="box">

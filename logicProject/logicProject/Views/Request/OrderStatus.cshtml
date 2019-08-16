@@ -2,12 +2,9 @@
 
 @{
     ViewBag.Title = "OrderStatus";
+    bool show = ViewData["ApproveOrNot"]!=null;
 }
 
-
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
 <div class="box">
     <table class="table table-responsive no-padding">
         <tr>
@@ -18,7 +15,7 @@
                 Request Date
             </th>
             <th>
-                Request ID
+                Request Form No.
             </th>
             <th>
                 Status
@@ -36,13 +33,15 @@
                     @Html.DisplayFor(modelItem => item.ReqDate)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.RequestId)
+                    @Html.DisplayFor(modelItem => item.RequestFormId)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Status)
                 </td>
                 <td>
-                    @Html.ActionLink("Approve?", "RequestApproval", new { requestId = item.RequestId }) |
+                    @if (show && item.Status=="Pending") {
+                    @Html.ActionLink("Approve?", "RequestApproval", new { requestId = item.RequestId })
+                    }   |
                     @Html.ActionLink("Details", "ViewRequestDetails", new { requestId = item.RequestId }) |
                 </td>
             </tr>

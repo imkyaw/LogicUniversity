@@ -1,47 +1,36 @@
 ﻿@model logicProject.Models.EF.Authorization
 @{
     ViewBag.Title = "AuthorizeStaff";
+    List<logicProject.Models.ViewModel.AuthorizationViewModel> list = ViewData["AuthList"] as List<logicProject.Models.ViewModel.AuthorizationViewModel>;
+   // List<logicProject.Models.EF.Authorization> list = ViewData["AuthList"] as List<logicProject.Models.EF.Authorization>;
 }
 
 <h2>AuthorizeStaff</h2>
 
-<div class="modal fade" id="modal-default">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                <h4 class="modal-title">Default Modal</h4>
-            </div>
-            <div class="modal-body">
-                <table class="table table-responsive display" id="e-table">
-                    <thead>
-                        <tr>
-                            <th>No</th>
-                            <th>Product Code</th>
-                            <th>Category</th>
-                            <th>Description</th>
-                            <th>Unit Of Measure</th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-        <!-- /.modal-content -->
-    </div>
-    <!-- /.modal-dialog -->
-</div>
 @* Product List *@
 <div>
+    <table class="table table-responsive">
+        <thead>
+            <tr>
+                <th>Staff Name</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th></th>
+            </tr>
+            @foreach(var a in list)
+            {
+                <tr>
+                    <td>@a.staffName</td>
+                    <td>@a.auth.StartDate<input type="hidden" class="sDate" value="@a.auth.StartDate"></td> 
+                    <td>@a.auth.EndDate<input type="hidden" class="eDate" value="@a.auth.EndDate"></td>
+                    <td>@Html.ActionLink("Delete", "DeleteAuth", new { id = a.auth.AuthNo })</td>
+                </tr>
+            }
+        </thead>
+    </table>
     <div style="float: left; width: 40%">
         <select class="StaffName" name="staffname" style="width:100%"></select>
-        <button type="button" id="productlist" class="btn btn-default" data-toggle="modal" data-target="#modal-default">
-            Product List
-        </button>
+        
 
         <div class="row">
             <div class="form-group col-md-6">
@@ -85,49 +74,33 @@
 
     $("#EndDate").datepicker({
         onSelect: function () {
-            var endDateObj = $(this).datepicker('getEndDate');
-            success: console.log(endDateObj)
+            
+        }
+    }).on("change", function () {
+        console.log("Got change event from field");
+        let startDate = $("#StartDate").val();
+        let endDate = $("#EndDate").val();
+        if (endDate < startDate) {
+            alert("Date Error.");
+            $("#EndDate").val("");
         }
     });
 
-    $("#productlist").click(function () {
-        var d = $("#e-table").DataTable({
-            "ajax": {
-                "url": "/Product/GetProductList",
-                "type": "POST",
-                "datatype": "json",
-            },
-            "columns": [
-                {
-                    "data": "ProductId",
-                    "searchable": false,
-                    "orderable": false,
-                    "targets": 0
-                },
-                {
-                    "data": "ProductId"
-                },
-                { "data": "Category" },
-                { "data": "Description" },
-                { "data": "Unit" }
-            ],
-
-            "serverSide": "true",
-            "order": [0, "asc"],
-            "processing": "true"
-        });
-
-        //$('#e-tab tbody').on('click', 'button', function () {
-        d.on('order.dt search.dt', function () {
-            d.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
-                cell.innerHTML = i + 1;
-            });
-        }).draw();
-        $("#vSearch").click(function () {
-            d.ajax.reload();
-
-        });
-    });
+    function validateDate(startDate,endDate) {
+        let sdates = document.getElementsByClassName('sDate');
+        let edates = document.getElementsByClassName('sDate');
+        
+        for (let i = 0; i < sdates.length; i++) {
+            let edate = edates[i].addEventListener(this).val();
+            let sdate = sdates[i].addEventListener(this).val();
+            if (edate >= startDate && sdate <= endDate) {
+                return true;
+            } else {
+                alert("Date Error! Choose other date range or remove the staff on that date");
+                return false;
+            }
+        }
+    }
 
     $(document).ready(function () {
        
@@ -162,16 +135,20 @@
             let selected = $(".StaffName option:selected").text();
             let startDate = $("#StartDate").val();
             let endDate = $("#EndDate").val();
-            $.ajax(
-                {
-                    url: "/DeptHead/AppointStaff?staffname=" + selected + "&getStartDate=" + startDate + "&getEndDate=" + endDate,
-                    contentType: 'application/json',
-                    dataType: 'json',
-                    type: 'POST',
-                    success: function (data) {
-                        alert("Authorization Successful");
-                    },
-                });
+            
+                $.ajax(
+                    {
+                        url: "/DeptHead/AppointStaff?staffname=" + selected + "&getStartDate=" + startDate + "&getEndDate=" + endDate,
+                        contentType: 'application/json',
+                        dataType: 'json',
+                        type: 'POST',
+                        success: function (data) {
+                            alert(data.message);
+                            if (data.redirect != null)
+                                window.location.href = data.redirect;
+                        }
+                    });
+            
         })
     });
 

@@ -3,10 +3,41 @@
     //Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <style>
-    select{
-        width:500px;
+    select {
+        width: 500px;
     }
 </style>
+
+<div class="modal fade" id="modal-default">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title">Default Modal</h4>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-responsive display" id="e-table" style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Product Code</th>
+                                <th>Category</th>
+                                <th>Description</th>
+                                <th>Unit Of Measure</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
 <h2>RequestForm</h2>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/css/select2.min.css" rel="stylesheet" />
 <div class="box">
@@ -31,50 +62,44 @@
                     <select class="products" id="products0"></select>
                 </td>
                 <td>
-                    <input type="button" value="+" name="add" class="add" id="add0">
+                    <input type="button" value="+" name="add" class="add" id="add0" onclick="maintainQty(this.id,this.name)">
                     <input type="text" name="qty0" value="0" class="col-md-4 qty" id="qty0" />
-                    <input type="button" value="-" name="minus" class="add" id="add0">
+                    <input type="button" value="-" name="minus" class="add" id="add0" onclick="maintainQty(this.id,this.name)">
                 </td>
 
             </tr>
         </tbody>
     </table>
 </div>
-<input type="button" value="Submit" onclick="SubmitToDb()"/>
+<button type="button" id="productlist" class="btn btn-default" data-toggle="modal" data-target="#modal-default">
+    Product List
+</button>
+
+<input type="checkbox" name="save" id="save" value="true"/>Save to Favourite
+<input type="hidden" name="saveReq" id="savfav"/>
+<input type="button" value="Submit" onclick="SubmitToDb()" />
 <script src="https://code.jquery.com/jquery-3.4.1.js"
         integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
         crossorigin="anonymous"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js"></script>
 <script>
-    //
-    function PopulateQty(){
-        let count = 1,
-            divs = document.getElementsByClassName("add");
-        for (var k = 0; k < divs.length; k++) {
-            divs[k].addEventListener("click", function (e) {
-                e.preventDefault();
-                var id = this.id;
-                id = id.replace("add", "");
-
-                var d = document.getElementById("qty" + id).value;
-                var a = this.name;
-
-                if (a == "add") {
+    // Qty add and minus
+    function maintainQty(clicked_id,clicked_name) {
+        let id = clicked_id.replace("add", "");
+        var d = document.getElementById("qty" + id).value;
+        if (clicked_name == "add") {
                     var val = parseInt(d) + 1;
-                } else {
-                    if (d > 0)
-                        var val = parseInt(d) - 1;
-                    else
-                        var val = 0;
-                }
-                document.getElementById("qty" + id).value = val;
-                /* Here, "this" refers to 1st div */
-            });
+        } else {
+            if (d > 0)
+                var val = parseInt(d) - 1;
+            else
+                var val = 0;
         }
+            document.getElementById("qty" + id).value = val;
     }
 
-    //
+    //add or delete rows
     let add = document.getElementById("add-row");
     let i = 0;
     let products;
@@ -83,15 +108,14 @@
 
     add.addEventListener("click", function (e) {
         e.preventDefault();
-        i++;
-        var addtr = "<tr><td> <input type='checkbox' name='record'></td><td><select class='productcategory' id='productcategory" + i + "'></select></td><td><select class='products' id='products" + i + "'></select></td><td><input type='button' value='+' name='add' class='add' id='add"+i+"'/><input type = 'text' name = 'qty"+i+"' value='0' class='col-md-4 qty' id = 'qty"+i+"' /><input type='button' value='-' name='minus' class='add' id='add"+i+"' /></td></tr>";
-        $('table tbody').append(addtr);
+        i++;        
+        var addtr = "<tr><td> <input type='checkbox' name='record'></td><td><select class='productcategory' id='productcategory" + i + "'></select></td><td><select class='products' id='products" + i + "'></select></td><td><input type='button' value='+' name='add' class='add' id='add" + i + "' onclick = 'maintainQty(this.id,this.name)'/><input type = 'text' name = 'qty" + i + "' value='0' class='col-md-4 qty' id = 'qty" + i + "' /><input type='button' value='-' name='minus' class='add' id='add" + i + "' onclick = 'maintainQty(this.id,this.name)'/></td></tr>";
+        $('#tbody_id').append(addtr);
         getData();
         $(".products").select2();
-        PopulateQty();
     });
     $(".delete-row").click(function () {
-        $("table tbody").find('input[name="record"]').each(function () {
+        $("#tbody_id").find('input[name="record"]').each(function () {
             if ($(this).is(":checked")) {
                 $(this).parents("tr").remove();
             }
@@ -131,7 +155,7 @@
                 success: function (products) {
                     $("#products" + id).html("");
                     //$("#Products").append($('<option></option>').val(null));
-                    // clear before appending new list 
+                    // clear before appending new list
                     $.each(products, function (i, product) {
                         $("#products" + id).append(
                             $('<option></option>').val(product).html(product));
@@ -140,10 +164,22 @@
             });
         });
     }
+
+    //Save to Favourite
+    $('#save').click(function () {
+        if ($(this).prop("checked") == true) {
+            $('#savfav').val("yes");
+        }
+        else if ($(this).prop("checked") == false) {   
+            $('#savfav').val("no");
+        }
+    });
+    //On Ready - Get Data from servers
     $(document).ready(function () {
         $(".products").select2();
         getData();
-        PopulateQty();
+        callProductList();
+       // PopulateQty();
     });
 
     function SubmitToDb() {
@@ -151,6 +187,7 @@
             qty = "";
         let productId = document.getElementsByClassName("products");
         let QtyTextBox = document.getElementsByClassName("qty");
+        let check = document.getElementById("savfav");
         for (let i = 0; i < productId.length; i++) {
             var id = productId[i].id;
             id = id.replace("products", "");
@@ -164,13 +201,11 @@
                 qty = qty + "," + QtyTextBox[i].value;
             else
                 qty = qty + QtyTextBox[i].value;
-
-            //var val = parseInt(productId[i].value);
-
         }
+        check = check.value;
         var xmlHttp = new XMLHttpRequest();
 
-        xmlHttp.open("post", "CreateRequest?products=" + products + "&qty=" + qty, true);
+        xmlHttp.open("post", "CreateRequest?products=" + products + "&qty=" + qty + "&save=" + check, true);
         console.log(xmlHttp.timeout);
         xmlHttp.send();
         xmlHttp.onreadystatechange = function () {
@@ -178,10 +213,48 @@
                 //alert("Successful on checkout");
                 window.location.href = "OrderStatus";
             } else {
-                //alert("Successful on checkout");
-                //window.location.href = "OrderStatus";
             }
         }
+    }
+    
+
+    function callProductList() {
+        var d = $("#e-table").DataTable({
+            "ajax": {
+                "url": "/Product/GetProductList",
+                "type": "POST",
+                //"data": function (data) {
+                //},
+                "datatype": "json",
+            },
+            "columns": [
+                {
+                    "data": "ProductId",
+                    "searchable": false,
+                    "orderable": false,
+                    "targets": 0
+                },
+                {
+                    "data": "ProductId"
+                },
+                { "data": "Category" },
+                { "data": "Description" },
+                { "data": "Unit" }
+
+            ],
+
+            "serverSide": "true",
+            "order": [0, "asc"],
+            "processing": "true"
+        });
+        d.on('order.dt search.dt', function () {
+            d.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                cell.innerHTML = i + 1;
+            });
+        }).draw();
+        $("#vSearch").click(function () {
+            d.ajax.reload();
+        });
     }
     
 </script>

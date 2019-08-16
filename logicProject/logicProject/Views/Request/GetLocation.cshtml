@@ -2,61 +2,78 @@
 
 @{
     ViewBag.Title = "Location";
+    var CollectionPt = (int)ViewData["collectionPoint"];
 }
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            $('input:checkbox').click(function () {
-                $('input:checkbox').not(this).prop('checked', false);
-                let id = $(this).val();
-                $('#locationId').val(id);
-                
-            });
-            $('#submitbtn').click(function () {
-                let selected = $("#locationId").val();
-                $.ajax(
-                    {
-                        url: "/Request/GetLocationAsync?locationId=" + selected,
-                        contentType: 'application/json',
-                        dataType: 'json',
-                        type: 'POST',
-                        success: function (data) {
-                            alert(data.message);
-                            window.location.href=data.redirect;
-                        },
-                    });
-            })
-        });
-    </script>
 
-    <h2>Select Collection Point</h2>
-    <br />
-    <input type="hidden" id="locationId" name="locationId"/>
-    <table class="table table-responsive">
+
+<h2>Select Collection Point</h2>
+<br />
+<input type="hidden" id="locationId" name="locationId" value="@CollectionPt" />
+<table class="table table-responsive">
+    <tr>
+        <th>
+            Collection Point
+        </th>
+        <th>
+            Time
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
         <tr>
-            <th>
-                Collection Point
-            </th>
-            <th>
-                Time
-            </th>
+            <td>
+                <input type="checkbox" name="point" class="point" value="@item.CollectionPtId">
+                @Html.DisplayFor(modelItem => item.CollectionPt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
         </tr>
+    }
 
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    <input type="checkbox" name="point" value="@item.CollectionPtId">
-                    @Html.DisplayFor(modelItem => item.CollectionPt)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
-            </tr>
+</table>
+<input type="submit" name="id" id="submitbtn" value="Save" />
+<br />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        
+        $('input:checkbox').click(function () {
+            $('input:checkbox').not(this).prop('checked', false);
+            let id = $(this).val();
+            $('#locationId').val(id);
+
+        });
+        var value = $('#locationId').val();
+        CheckLocation(value);
+        $('#submitbtn').click(function () {
+            let selected = $("#locationId").val();
+            $.ajax(
+                {
+                    url: "/Request/GetLocationAsync?locationId=" + selected,
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    type: 'POST',
+                    success: function (data) {
+                        alert(data.message);
+                        $('#locationId').val(data.locationId);
+                        CheckLocation(data.locationId);
+                        window.location.href = data.redirect;
+                        
+                    },
+                });
+        });
+        
+    });
+    function CheckLocation(value) {
+        var points = document.getElementsByClassName('point');
+        
+        for (var i = 0; i < points.length; i++) {
+            if (points[i].value == value) {
+                points[i].checked = true;
+            }
         }
-
-    </table>
-    <input type="submit" name="id" id="submitbtn" value="Save" />
-    <br />
-
+    }
+</script>

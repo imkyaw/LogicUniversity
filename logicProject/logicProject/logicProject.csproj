@@ -152,6 +152,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
+    <Compile Include="Controllers\RepresentativeController.cs" />
     <Compile Include="Controllers\RequestController.cs" />
     <Compile Include="Controllers\StoreController.cs" />
     <Compile Include="Filter\FilterAuthorize.cs" />
@@ -182,6 +183,14 @@
     <Compile Include="Migrations\201908030809074_addAjustmentPrice.Designer.cs">
       <DependentUpon>201908030809074_addAjustmentPrice.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201908160246119_lastUpdate.cs" />
+    <Compile Include="Migrations\201908160246119_lastUpdate.Designer.cs">
+      <DependentUpon>201908160246119_lastUpdate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201908160303534_addfav.cs" />
+    <Compile Include="Migrations\201908160303534_addfav.Designer.cs">
+      <DependentUpon>201908160303534_addfav.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\DAO\RequestDAO.cs" />
     <Compile Include="Models\DBContext\LogicEntities.cs" />
@@ -204,9 +213,11 @@
     <Compile Include="Models\EF\StoreStaff.cs" />
     <Compile Include="Models\EF\Supplier.cs" />
     <Compile Include="Models\EF\SupplierProduct.cs" />
+    <Compile Include="Models\ViewModel\AuthorizationViewModel.cs" />
     <Compile Include="Models\ViewModel\CategoryViewModel.cs" />
     <Compile Include="Models\ViewModel\RequestViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utility\EmailBody.cs" />
     <Compile Include="Utility\EmailService.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -2758,9 +2769,12 @@
     <Content Include="Views\Store\Dashboard.cshtml" />
     <Content Include="Views\Product\ProductCatalog.cshtml" />
     <Content Include="Views\Home\Error.cshtml" />
+    <Content Include="Views\Shared\_StoreLayout.cshtml" />
+    <Content Include="Views\Request\ViewFavRequest.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Representative\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
@@ -2793,6 +2807,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201908030809074_addAjustmentPrice.resx">
       <DependentUpon>201908030809074_addAjustmentPrice.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908160246119_lastUpdate.resx">
+      <DependentUpon>201908160246119_lastUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908160303534_addfav.resx">
+      <DependentUpon>201908160303534_addfav.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

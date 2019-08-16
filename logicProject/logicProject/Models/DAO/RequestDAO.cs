@@ -16,7 +16,7 @@ namespace logicProject.Models.DAO
             Outstanding,
             Complete
         }
-        public static void AddRequest(string products,string qty,int id)
+        public static void AddRequest(string products,string qty,int id,string save)
         {
             string[] productArr = products.Split(',').ToArray();
             int[] qtyArr = qty.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
@@ -25,10 +25,12 @@ namespace logicProject.Models.DAO
             using(LogicEntities db = new LogicEntities())
             {
                 string DeptId = db.DepartmentStaff.Where(x => x.StaffId == id).Select(x => x.DeptId).FirstOrDefault();
+                string DeptName = db.Department.Where(x => x.DeptId == DeptId).Select(x => x.DeptName).FirstOrDefault();
                 Request request = new Request();
                 request.StaffId = id;
                 request.DeptId = DeptId;
-                request.RequestFormId = DeptId + "/";
+                //request.RequestFormId = DeptId + "/";
+                request.FavRequest = (save == "yes") ? true : false;
                 request.ReqDate = reqTime;
                 request.Status = status.Pending.ToString();
                 db.Request.Add(request);
@@ -44,7 +46,11 @@ namespace logicProject.Models.DAO
                     db.RequestDetail.Add(rd);   
                 }
                 db.SaveChanges();
+                Request r=db.Request.Find(request.RequestId);
+                r.RequestFormId = DeptId + "/" + "R0" + r.RequestId + "-" +DeptName;
+                db.SaveChanges();
             }
         }
+
     }
 }

@@ -18,6 +18,5 @@ namespace logicProject.Models.EF
         [ForeignKey("ProductId")]
         public virtual Product Product { get; set; }
         public int ReqQty { get; set; }
-        public string ReceivedQty { get; set; }
     }
 }
