@@ -392,6 +392,7 @@ namespace logicProject.Controllers
 
                         StockTransaction st = new StockTransaction
                         {
+                            TranDate = DateTime.Now,
                             ProductId = detail.ProductId,
                             Qty = detail.Qty,
                             Remarks = "Inventory Adjustment: " + detail.reason,
