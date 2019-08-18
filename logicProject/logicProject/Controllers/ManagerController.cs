@@ -47,7 +47,9 @@ namespace logicProject.Controllers
 
             if (startDate != null && endDate != null)
             {
-                List<StockTransaction> stockCardDetails = db.StockTransaction.Where(p => p.ProductId == id && p.TranDate > DateTime.Parse(startDate) && p.TranDate < DateTime.Parse(endDate)).ToList();
+                DateTime start = DateTime.Parse(startDate);
+                DateTime end = DateTime.Parse(endDate);
+                List<StockTransaction> stockCardDetails = db.StockTransaction.Where(p => p.ProductId == id && p.TranDate > start && p.TranDate < end).ToList();
                 ViewData["stockcarddetails"] = stockCardDetails;
             }
             else
