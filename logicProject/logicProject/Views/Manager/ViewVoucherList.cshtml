@@ -1,4 +1,5 @@
 ﻿@using logicProject.Models.EF;
+@using logicProject.Models.DBContext; @*importing the database to retrieve the user name*@
 @model logicProject.Models.EF.Adjustment
 
 @{
@@ -8,16 +9,19 @@
     StoreStaff user = (StoreStaff)Session["user"];
     Layout = "~/Views/Manager/_ManagerLayout.cshtml";
     //Written By Udaya
+    LogicEntities db = new LogicEntities();
 }
 
 <h2>Store Manager Voucher List</h2>
+<br />
 
 <table border="1">
     <thead>
         <tr>
-            <td>Voucher No</td>
-            <td>Created by</td>
-            <td>Date Created</td>
+            <td><strong>Voucher No</strong></td>
+            <td><strong>Store Clerk</strong></td>
+            <td><strong>Date Created</strong></td>
+            <td><strong>Status</strong></td>
         </tr>
     </thead>
 
@@ -30,10 +34,15 @@
                     <button onclick='location.href="@Url.Action("ApproveForm","Manager", new RouteValueDictionary ( new { id = @item.AdjustmentId } ))"' name="button">@item.AdjustmentId</button>
                 </td>
                 <td>
-                    @item.StaffId
+                    @db.StoreStaff.Where(e => e.StaffId == item.StaffId).Select(e => e.StaffName).First()
+                    @*@item.StaffId*@
                 </td>
                 <td>
-                    @item.AdjustedDate
+                    @Convert.ToDateTime(@item.AdjustedDate).Date.ToString("dd/MM/yyyy")
+
+                </td>
+                <td>
+                    @item.Status
                 </td>
             </tr>
 
@@ -41,3 +50,16 @@
 
     </tbody>
 </table>
+
+<style>
+    table {
+        border: 1px solid black;
+        width: 100%;
+    }
+
+    tr, td {
+        padding: 10px;
+        border: 1px solid black;
+        text-align: center;
+    }
+</style>

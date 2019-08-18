@@ -9,60 +9,89 @@
 
     List<AdjustmentDetail> cart_list = (List<AdjustmentDetail>)ViewData["cart_list"];
     StoreStaff user = (StoreStaff)Session["user"];
-
+    Adjustment reqId = ViewData["adjustment"] as Adjustment;
 }
 
 <h2>Approve Inventory Adjustment Status</h2>
 
-<table>
-    <thead>
-        <tr>
-            <td>
-                Product code
-            </td>
-            <td>
-                Qty
-            </td>
-            <td>
-                Unit price
-            </td>
-            <td>
-                Total price
-            </td>
-            <td>
-                Reason
-            </td>
-        </tr>
-    </thead>
+@using (Html.BeginForm("ApproveForm", "Supervisor", FormMethod.Post))
+{
+    <div class="box">
+        <div id="table1">
 
-    @if (cart_list != null)
-    {
-        foreach (var item in cart_list)
-        {
-            <tr>
-                <td>
-                    @item.ProductId
-                </td>
-                <td>
-                    @item.Qty
-                </td>
-                <td>
-                    @item.UnitPrice
-                </td>
-                <td>
-                    @item.TotalPrice
-                </td>
-                <td>
-                    @item.reason
-                </td>
-            </tr>
+            <table style="border: 1px solid black">
+                <thead>
+                    <tr>
+                        <td>
+                            <strong>Product code</strong>
+                        </td>
+                        <td>
+                            <strong>Qty</strong>
+                        </td>
+                        <td>
+                            <strong>Unit price</strong>
+                        </td>
+                        <td>
+                            <strong>Total price</strong>
+                        </td>
+                        <td>
+                            <strong>Reason</strong>
+                        </td>
+                    </tr>
+                </thead>
+
+
+                @foreach (var item in cart_list)
+                {
+                    <tr>
+                        <td>
+                            @item.ProductId
+                        </td>
+                        <td>
+                            @item.Qty
+                        </td>
+                        <td>
+                            @item.UnitPrice
+                        </td>
+                        <td>
+                            @item.TotalPrice
+                        </td>
+                        <td>
+                            @item.reason
+                        </td>
+                    </tr>
+                }
+
+
+            </table>
+        </div>
+
+        <br />
+        <br />
+
+        @{ if (reqId.Status.Equals("Pending"))
+            {
+                <input type="hidden" name="id" value="@reqId.AdjustmentId" />
+                <p><strong>Remarks:</strong>@Html.TextArea("remarks", null, new { @class = "form-control", rows = "4", cols = "50" })</p>
+                <br />
+                <input type="submit" name="approve" value="Approve" class="btn btn btn-bitbucket" />
+                <input type="submit" name="reject" value="Reject" class="btn btn-pinterest" />
+            }
+
         }
-    }
 
-</table>
+    </div>
 
+    <style>
+        table {
+            border: 1px solid black;
+            width: 100%;
+        }
 
-
-<button onclick='location.href="@Url.Action("ChangeStatus","Supervisor")"' name="button">Approve</button>
-
-<button onclick='location.href="@Url.Action("create_form","clerk")"' name="button">Reject</button>
+        tr, td {
+            padding: 10px;
+            border: 1px solid black;
+            text-align: center;
+        }
+    </style>
+}
