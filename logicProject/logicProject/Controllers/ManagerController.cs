@@ -382,7 +382,7 @@ namespace logicProject.Controllers
                     foreach (var detail in adjustmentDetails)
                     {
                         var res = db.Product.SingleOrDefault(p => p.ProductId == detail.ProductId);
-                        var res2 = db.StockTransaction.SingleOrDefault(p => p.ProductId == detail.ProductId);
+                        //var res2 = db.StockTransaction.SingleOrDefault(p => p.ProductId == detail.ProductId);
 
                         if (res != null)
                         {
@@ -390,11 +390,22 @@ namespace logicProject.Controllers
                             db.SaveChanges();
                         }
 
-                        if (res2 != null)
+                        StockTransaction st = new StockTransaction
                         {
-                            res2.Qty += detail.Qty;
-                            db.SaveChanges();
-                        }
+                            ProductId = detail.ProductId,
+                            Qty = detail.Qty,
+                            Remarks = "Inventory Adjustment: " + detail.reason,
+                            TotalBalance = res.Qty
+                        };
+
+                        db.StockTransaction.Add(st);
+                        db.SaveChanges();
+
+                        //if (res2 != null)
+                        //{
+                        //    res2.Qty += detail.Qty;
+                        //    db.SaveChanges();
+                        //}
                     }
                     //Send email to notify that adjustment voucher has been approved
                     string msg = "Dear " + staff.StaffName + ",\n Your Adjustment voucher has been approved.";
