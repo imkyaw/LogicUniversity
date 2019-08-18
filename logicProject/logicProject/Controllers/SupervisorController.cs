@@ -223,9 +223,13 @@ namespace logicProject.Controllers
             using (LogicEntities db = new LogicEntities())
             {
                 cart_list = db.AdjustmentDetail.Where(item => item.AdjustmentId == id).ToList();
+                Adjustment req = db.Adjustment.Where(x => x.AdjustmentId == id).SingleOrDefault();
+
+                ViewData["cart_list"] = cart_list;
+                ViewData["adjustment"] = req;
                 db.SaveChanges();
             }
-            ViewData["cart_list"] = cart_list;
+
 
 
             return View();
