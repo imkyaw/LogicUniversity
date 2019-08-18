@@ -47,28 +47,29 @@
         document.getElementById("t_price").value = res;
     };
 </script>
-<h2>Create Adjustment Voucher</h2>
+<h2>Create Adjustment Voucher  </h2>
+<br />
 
 <table>
     <thead>
         <tr>
             <td>
-                Product code
+                <strong>Product code</strong>
             </td>
             <td>
-                Description
+                <strong>Description</strong>
             </td>
             <td>
-                Qty
+                <strong>Qty</strong>
             </td>
             <td>
-                Unit price
+                <strong>Unit price</strong>
             </td>
             <td>
-                Total price
+                <strong>Total price</strong>
             </td>
             <td>
-                Reason
+                <strong>Reason</strong>
             </td>
         </tr>
     </thead>
@@ -100,47 +101,69 @@
     }
 
 
-    @using (Html.BeginForm("addnew", "Inventory", FormMethod.Post))
+
+    @using (Html.BeginForm("addnew", "clerk", FormMethod.Post))
     {
-        @Html.HiddenFor(x => x.AdjustmentId, new { Value = @form_number })
-        {
-            <tr>
-                <td>
-                    @Html.TextBoxFor(x => x.ProductId, new { id = "itemCode", @Value = "" })
-                </td>
-                <td>
-                    @Html.DropDownList("Select Item", items.Select(item => new SelectListItem { Text = item.Description, Value = item.ProductId + "-" + item.UnitPrice }), new { id = "itemId", onchange = "onChange()" })
-                </td>
-                <td>
-                    @Html.TextBoxFor(x => x.Qty, new { id = "qty", oninput = "onChange_qty()", placeholder = "Enter Quantity", required = "required" })
-                </td>
-                <td>
-                    @Html.TextBoxFor(x => x.UnitPrice, new { id = "u_price", @readonly = "readonly" })
-                </td>
-                <td>
-                    @Html.TextBoxFor(x => x.TotalPrice, new { id = "t_price", @readonly = "readonly" })
-                </td>
-                <td>
-                    @Html.TextBoxFor(x => x.reason, new { placeholder = "Enter Remarks" })
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <input type="submit" value="addnew">
-                </td>
-            </tr>
-        }
+
+        <tr>
+            <td>
+                Choose item
+            </td>
+            <td>
+                @Html.DropDownList("Select Item", items.Select(item => new SelectListItem { Text = item.Description, Value = item.ProductId + "-" + item.UnitPrice }), new { id = "itemId", onchange = "onChange()" })
+            </td>
+            <td>
+                @Html.TextBoxFor(x => x.Qty, new { id = "qty", oninput = "onChange_qty()", placeholder = "Enter Quantity", required = "required" })
+            </td>
+            <td>
+                @Html.TextBoxFor(x => x.UnitPrice, new { id = "u_price", @readonly = "readonly" })
+            </td>
+            <td>
+                @Html.TextBoxFor(x => x.TotalPrice, new { id = "t_price", @readonly = "readonly" })
+            </td>
+            <td>
+                @Html.TextBoxFor(x => x.reason, new { placeholder = "Enter Remarks" })
+            </td>
+
+        </tr>
+
+        <tr>
+            <td>
+                <input type="submit" value="Add new item">
+            </td>
+            <td>
+                @Html.HiddenFor(x => x.AdjustmentId, new { Value = @form_number })
+            </td>
+            <td>
+                @Html.HiddenFor(x => x.ProductId, new { id = "itemCode", @Value = "" })
+            </td>
+
+        </tr>
     }
 
 
 </table>
+<br /><br />
 
 @if (cart_list != null)
 {
-    using (Html.BeginForm("submitrequest", "Inventory", FormMethod.Post))
+    using (Html.BeginForm("submitrequest", "clerk", FormMethod.Post))
     {
         <input type="hidden" value="@form_number" name="form_number" />
         <input type="hidden" value="@user.StaffId" name="emp_id" />
         <input type="submit" value="Confirm and Send Request">
     }
 }
+
+<style>
+    table {
+        border: 1px solid black;
+        width: 100%;
+    }
+
+    tr, td {
+        padding: 10px;
+        border: 1px solid black;
+        text-align: center;
+    }
+</style>
