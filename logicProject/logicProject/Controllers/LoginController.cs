@@ -84,21 +84,15 @@ namespace logicProject.Controllers
                 return Json(new { isok = false, message = "Login Unsuccessful" });
             }
             DepartmentStaff user = db.DepartmentStaff.Where(x => x.Username == username && x.Password == password).SingleOrDefault();
-            //string sessionId = Guid.NewGuid().ToString();
             if (user == null)
             {
                 return Json(new { isok = false, message = "Login Unsuccessful" });
             }
-            //if (user != null)
-            //{
-            //    user.SessionId = sessionId;
-            //    db.SaveChanges();
-            //}
             return Json(new { isok = true, message = "Login Successful",Id=user.StaffId });
         }
+
         public ActionResult Logout(string type)
-        {
-              
+        { 
             if (type == "d")
             {
                 string session = (string)Session["DeptSession"];
@@ -121,6 +115,11 @@ namespace logicProject.Controllers
                 return RedirectToAction("StoreLogin");
             }
             
+        }
+        [HttpGet,Route]
+        public ActionResult StartPage()
+        {
+            return View();
         }
     }
 }

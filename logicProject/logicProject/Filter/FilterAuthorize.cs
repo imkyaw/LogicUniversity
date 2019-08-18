@@ -35,10 +35,9 @@ namespace logicProject.Filter
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             DepartmentStaff ds = (DepartmentStaff)filterContext.HttpContext.Session["DeptStaff"];
+            bool tempHead = (bool)filterContext.HttpContext.Session["TempHead"];
             if (Roles == "All")
             {
-                
-                
                 if ((DepartmentStaff)filterContext.HttpContext.Session["DeptStaff"]!=null)
                 {
                     return;
@@ -49,7 +48,7 @@ namespace logicProject.Filter
                 string[] roles = Roles.Split(',');
                 foreach (var role in roles)
                 {
-                    if ((DepartmentStaff)filterContext.HttpContext.Session["DeptStaff"] != null && ds.StaffType==role)
+                    if ((DepartmentStaff)filterContext.HttpContext.Session["DeptStaff"] != null && ds.StaffType==role  || tempHead==true)
                     {
                         return;
                     }

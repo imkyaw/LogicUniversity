@@ -21,8 +21,8 @@
             {
                 <tr>
                     <td>@a.staffName</td>
-                    <td>@a.auth.StartDate<input type="hidden" class="sDate" value="@a.auth.StartDate"></td> 
-                    <td>@a.auth.EndDate<input type="hidden" class="eDate" value="@a.auth.EndDate"></td>
+                    <td>@a.startDate<input type="hidden" class="sDate" value="@a.auth.StartDate"></td> 
+                    <td>@a.endDate<input type="hidden" class="eDate" value="@a.auth.EndDate"></td>
                     <td>@Html.ActionLink("Delete", "DeleteAuth", new { id = a.auth.AuthNo })</td>
                 </tr>
             }

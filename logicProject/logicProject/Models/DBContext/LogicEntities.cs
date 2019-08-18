@@ -20,6 +20,8 @@ namespace logicProject.Models.DBContext
         public virtual DbSet<RequestDisbursementDetail> RequestDisbursementDetail { get; set; }
         public virtual DbSet<Disbursement> Disbursement { get; set; }
         public virtual DbSet<DisbursementDetail> DisbursementDetail { get; set; }
+        public virtual DbSet<FavOrder> FavOrder { get; set; }
+        public virtual DbSet<FavOrderDetails> FavOrderDetails { get; set; }
         public virtual DbSet<StoreStaff> StoreStaff { get; set; }
         public virtual DbSet<DepartmentStaff> DepartmentStaff { get; set; }
         public virtual DbSet<Department> Department { get; set; }

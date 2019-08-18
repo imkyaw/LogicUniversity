@@ -1,0 +1,190 @@
+﻿@model logicProject.Models.EF.FavOrder
+@{
+    ViewBag.Title = "CreateFavOrder";
+}
+
+<h2>Create Saved Order</h2>
+<style>
+    select {
+        width: 500px;
+    }
+</style>
+<div class="form-horizontal">
+    <div class="form-group">
+        @Html.LabelFor(x => x.FavOrderName, new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(x => x.FavOrderName, new { @class = "form-control" })
+        </div>
+    </div>
+    <input type="button" id="add-row" value="Add Row">
+    <button type="button" class="delete-row">Delete Row</button>
+    <table class="table table-responsive" id="maintable">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Category</th>
+                <th>Product</th>
+                <th>Qty</th>
+            </tr>
+        </thead>
+        <tbody id="tbody_id">
+            <tr>
+                <td><input type="checkbox" name="record"></td>
+                <td>
+                    <select class="productcategory" id="productcategory0"></select>
+                </td>
+                <td>
+                    <select class="products" id="products0"></select>
+                </td>
+                <td>
+                    <input type="button" value="+" name="add" class="add" id="add0" onclick="maintainQty(this.id,this.name)">
+                    <input type="text" name="qty0" value="0" class="col-md-4 qty" id="qty0" />
+                    <input type="button" value="-" name="minus" class="add" id="add0"  onclick="maintainQty(this.id,this.name)">
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<input type="button" value="Submit" onclick="SubmitToDb()" />
+
+
+
+<script type="text/javascript">
+    function maintainQty(clicked_id, clicked_name) {
+        let id = clicked_id.replace("add", "");
+        var d = document.getElementById("qty" + id).value;
+        if (clicked_name == "add") {
+            var val = parseInt(d) + 1;
+        } else {
+            if (d > 0)
+                var val = parseInt(d) - 1;
+            else
+                var val = 0;
+        }
+        document.getElementById("qty" + id).value = val;
+    }
+
+    //add or delete rows
+    let add = document.getElementById("add-row");
+    let i = 0;
+    let products;
+    let qty;
+    let tbody = document.getElementById("tbody_id");
+
+    add.addEventListener("click", function (e) {
+        e.preventDefault();
+        i++;
+        var addtr = "<tr><td> <input type='checkbox' name='record'></td><td><select class='productcategory' id='productcategory" + i + "'></select></td><td><select class='products' id='products" + i + "'></select></td><td><input type='button' value='+' name='add' class='add' id='add" + i + "' onclick = 'maintainQty(this.id,this.name)'/><input type = 'text' name = 'qty" + i + "' value='0' class='col-md-4 qty' id = 'qty" + i + "' /><input type='button' value='-' name='minus' class='add' id='add" + i + "' onclick = 'maintainQty(this.id,this.name)'/></td></tr>";
+        $('#tbody_id').append(addtr);
+        getData();
+        $(".products").select2();
+    });
+    $(".delete-row").click(function () {
+        $("#tbody_id").find('input[name="record"]').each(function () {
+            if ($(this).is(":checked")) {
+                $(this).parents("tr").remove();
+            }
+        });
+
+    });
+    //
+    function getData() {
+        $(".productcategory").select2({
+            placeholder: "select product",
+            ajax: {
+                type: "GET",
+                url: "/Request/SearchCategory",
+                success: console.log("success"),
+                dataType: "json",
+                data: function (params) {
+                    return {
+                        searchTerm: params.term
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: data
+                    };
+                }
+            }
+        });
+
+        $('.productcategory').on('select2:select', function (e) {
+            var id = this.id;
+            id = id.replace("productcategory", "");
+            var d = e.params.data;
+            $.ajax({
+                url: "/Request/SearchProduct?category=" + d.text,
+                dataType: 'json',
+                type: "GET",
+                success: function (products) {
+                    $("#products" + id).html("");
+                    //$("#Products").append($('<option></option>').val(null));
+                    // clear before appending new list
+                    $.each(products, function (i, product) {
+                        $("#products" + id).append(
+                            $('<option></option>').val(product).html(product));
+                    });
+                }
+            });
+        });
+    }
+
+    //Save to Favourite
+    //$('#save').click(function () {
+    //    if ($(this).prop("checked") == true) {
+    //        $('#savfav').val("yes");
+    //    }
+    //    else if ($(this).prop("checked") == false) {   
+    //        $('#savfav').val("no");
+    //    }
+    //});
+    //On Ready - Get Data from servers
+    $(document).ready(function () {
+        $(".products").select2();
+        getData();
+        callProductList();
+        // PopulateQty();
+    });
+
+    	function SubmitToDb() {
+        	let products = "",
+            	qty = "";
+        	let productId = document.getElementsByClassName("products");
+            let QtyTextBox = document.getElementsByClassName("qty");
+            let nameId = document.getElementById("FavOrderName");
+            nameId = nameId.value;
+        	for (let i = 0; i < productId.length; i++) {
+            	var id = productId[i].id;
+            	id = id.replace("products", "");
+            	console.log(productId[i].value);
+            	console.log(QtyTextBox[i].value);
+            	if (products != "")
+                	products = products + "," + productId[i].value;
+            	else
+                	products = products + productId[i].value;
+            	if (qty != "")
+                	qty = qty + "," + QtyTextBox[i].value;
+            	else
+                	qty = qty + QtyTextBox[i].value;
+
+            	//var val = parseInt(productId[i].value);
+
+        	}
+        	var xmlHttp = new XMLHttpRequest();
+
+            xmlHttp.open("post", "CreateFavOrder?products=" + products + "&qty=" + qty + "&nameId=" + nameId, true);
+        	console.log(xmlHttp.timeout);
+        	xmlHttp.send();
+        	xmlHttp.onreadystatechange = function () {
+            	if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+                	alert("Your order is added to favourite list.");
+                    window.location.href = "ViewFaveOrder";
+            	} else {
+                	//alert("Successful on checkout");
+                	//window.location.href = "OrderStatus";
+            	}
+        	}
+    	}
+</script>
+

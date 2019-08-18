@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "RequestForm";
+   
     //Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <style>
@@ -7,7 +7,7 @@
         width: 500px;
     }
 </style>
-
+<h3>Request Form</h3>
 <div class="modal fade" id="modal-default">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -38,46 +38,54 @@
         </div>
         <!-- /.modal-dialog -->
     </div>
-<h2>RequestForm</h2>
+
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/css/select2.min.css" rel="stylesheet" />
 <div class="box">
-    <input type="button" id="add-row" value="Add Row">
-    <button type="button" class="delete-row">Delete Row</button>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Category</th>
-                <th>Product</th>
-                <th>Qty</th>
-            </tr>
-        </thead>
-        <tbody id="tbody_id">
-            <tr>
-                <td><input type="checkbox" name="record"></td>
-                <td>
-                    <select class="productcategory" id="productcategory0"></select>
-                </td>
-                <td>
-                    <select class="products" id="products0"></select>
-                </td>
-                <td>
-                    <input type="button" value="+" name="add" class="add" id="add0" onclick="maintainQty(this.id,this.name)">
-                    <input type="text" name="qty0" value="0" class="col-md-4 qty" id="qty0" />
-                    <input type="button" value="-" name="minus" class="add" id="add0" onclick="maintainQty(this.id,this.name)">
-                </td>
+    <div class="box-header">
+        @*<input type="button" class="btn btn-sm btn-dropbox" id="add-row" value="Add Row">*@
+        <button type="button" class="btn btn-sm btn-dropbox" id="add-row"><i class="fa fa-plus"></i>   Add Row</button>
+        <button type="button" class="btn btn-sm btn-danger delete-row"><i class="fa fa-trash"></i>   Delete Row</button>
+    </div>
+    <div class="box-body">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Category</th>
+                    <th>Product</th>
+                    <th>Qty</th>
+                </tr>
+            </thead>
+            <tbody id="tbody_id">
+                <tr>
+                    <td><input type="checkbox" name="record"></td>
+                    <td>
+                        <select class="productcategory" id="productcategory0"></select>
+                    </td>
+                    <td>
+                        <select class="products" id="products0"></select>
+                    </td>
+                    <td>
+                        <input type="button" value="+" name="add" class="add" id="add0" onclick="maintainQty(this.id,this.name)">
+                        <input type="text" name="qty0" value="0" class="col-md-4 qty" id="qty0" />
+                        <input type="button" value="-" name="minus" class="add" id="add0" onclick="maintainQty(this.id,this.name)">
+                    </td>
 
-            </tr>
-        </tbody>
-    </table>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="box-footer">
+        <button type="button" id="productlist" class="btn btn-default" data-toggle="modal" data-target="#modal-default">
+            Product List
+        </button>
+
+        @*<input type="checkbox" name="save" id="save" value="true"/>Save to Favourite
+        <input type="hidden" name="saveReq" id="savfav"/>*@
+        <input type="button" class="btn btn-success pull-right" value="Submit" onclick="SubmitToDb()" />
+    </div>
 </div>
-<button type="button" id="productlist" class="btn btn-default" data-toggle="modal" data-target="#modal-default">
-    Product List
-</button>
 
-<input type="checkbox" name="save" id="save" value="true"/>Save to Favourite
-<input type="hidden" name="saveReq" id="savfav"/>
-<input type="button" value="Submit" onclick="SubmitToDb()" />
 <script src="https://code.jquery.com/jquery-3.4.1.js"
         integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
         crossorigin="anonymous"></script>
@@ -166,14 +174,15 @@
     }
 
     //Save to Favourite
-    $('#save').click(function () {
-        if ($(this).prop("checked") == true) {
-            $('#savfav').val("yes");
-        }
-        else if ($(this).prop("checked") == false) {   
-            $('#savfav').val("no");
-        }
-    });
+    //$('#save').click(function () {
+    //    if ($(this).prop("checked") == true) {
+    //        $('#savfav').val("yes");
+    //    }
+    //    else if ($(this).prop("checked") == false) {   
+    //        $('#savfav').val("no");
+    //    }
+    //});
+
     //On Ready - Get Data from servers
     $(document).ready(function () {
         $(".products").select2();
@@ -187,7 +196,7 @@
             qty = "";
         let productId = document.getElementsByClassName("products");
         let QtyTextBox = document.getElementsByClassName("qty");
-        let check = document.getElementById("savfav");
+        //let check = document.getElementById("savfav");
         for (let i = 0; i < productId.length; i++) {
             var id = productId[i].id;
             id = id.replace("products", "");
@@ -202,10 +211,10 @@
             else
                 qty = qty + QtyTextBox[i].value;
         }
-        check = check.value;
+        //check = check.val();
         var xmlHttp = new XMLHttpRequest();
 
-        xmlHttp.open("post", "CreateRequest?products=" + products + "&qty=" + qty + "&save=" + check, true);
+        xmlHttp.open("post", "CreateRequest?products=" + products + "&qty=" + qty , true);
         console.log(xmlHttp.timeout);
         xmlHttp.send();
         xmlHttp.onreadystatechange = function () {

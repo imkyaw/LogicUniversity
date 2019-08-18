@@ -7,13 +7,13 @@ namespace logicProject.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.2.0-61023")]
-    public sealed partial class addfav : IMigrationMetadata
+    public sealed partial class addFav : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(addfav));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(addFav));
         
         string IMigrationMetadata.Id
         {
-            get { return "201908160303534_addfav"; }
+            get { return "201908160728370_addFav"; }
         }
         
         string IMigrationMetadata.Source

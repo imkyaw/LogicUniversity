@@ -1,0 +1,40 @@
+﻿@using logicProject.Models.EF
+@{
+    ViewBag.Title = "SendForOrder";
+}
+
+<h2>Request</h2>
+
+<div class="box">
+    @using (Html.BeginForm("SendForOrder", "Request", FormMethod.Post))
+    {
+
+        <table class="table table-responsive">
+            <tr>
+                <th>Product Description</th>
+                <th>Unit of Measure</th>
+                <th>Quantity</th>
+            </tr>
+
+            @foreach (var a in Model)
+            {
+                <tr>
+                    <td>@a.Product.Description</td>
+                    <td>@a.Product.Unit</td>
+                    <td>@a.FavQty</td>
+                </tr>
+            }
+        </table>
+
+        <input type="submit" name=“submit” value="Submit" />
+    }
+
+    <br />
+    <br />
+    <br />
+    <br />
+    <div>
+        @Html.ActionLink("Back to List", "ViewFaveOrder")
+    </div>
+</div>
+

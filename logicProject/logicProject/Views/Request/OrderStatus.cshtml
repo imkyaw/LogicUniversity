@@ -2,50 +2,69 @@
 
 @{
     ViewBag.Title = "OrderStatus";
-    bool show = ViewData["ApproveOrNot"]!=null;
+    bool show = ViewData["ApproveOrNot"] != null;
 }
-
+<h3>Request Orders</h3>
 <div class="box">
-    <table class="table table-responsive no-padding">
-        <tr>
-            <th>
-                Department Name
-            </th>
-            <th>
-                Request Date
-            </th>
-            <th>
-                Request Form No.
-            </th>
-            <th>
-                Status
-            </th>
-            <th></th>
-        </tr>
+    <div class="box-body">
+        <table class="table table-responsive no-padding" id="dtable">
+            <thead>
+                <tr>
+                    <th>
+                        Department Name
+                    </th>
+                    <th>
+                        Request Date
+                    </th>
+                    <th>
+                        Request Form No.
+                    </th>
+                    <th>
+                        Status
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Department.DeptName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ReqDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.RequestFormId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Status)
+                        </td>
+                        <td>
+                            @if (show && item.Status == "Pending")
+                            {
+                                @Html.ActionLink("Approve?", "RequestApproval", new { requestId = item.RequestId }, new { @class = "btn btn-xs btn-flat btn-info" })
+                            }
+                            @Html.ActionLink("Details", "ViewRequestDetails", new { requestId = item.RequestId }, new { @class = "btn btn-xs btn-flat btn-default" })
+                        </td>
+                    </tr>
+                }
+            </tbody>
 
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Department.DeptName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ReqDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.RequestFormId)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Status)
-                </td>
-                <td>
-                    @if (show && item.Status=="Pending") {
-                    @Html.ActionLink("Approve?", "RequestApproval", new { requestId = item.RequestId })
-                    }   |
-                    @Html.ActionLink("Details", "ViewRequestDetails", new { requestId = item.RequestId }) |
-                </td>
-            </tr>
-        }
-
-    </table>
+        </table>
+    </div>
 </div>
+    <script>
+        $(document).ready(function () {
+            $('#dtable').DataTable({
+                "columnDefs": [
+                    {
+                        'searchable': false,
+                        'targets': [4]
+                    }
+                ]
+
+            });
+        });
+    </script>

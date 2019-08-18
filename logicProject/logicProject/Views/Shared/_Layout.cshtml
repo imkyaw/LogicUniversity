@@ -19,7 +19,8 @@
     <link href="~/my-admin-lte/plugins/select2/dist/css/select2.min.css" rel="stylesheet" />
     <!-- Date Picker -->
     <link rel="stylesheet" href="~/my-admin-lte/plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
-
+    <link rel="stylesheet" href="~/my-admin-lte/plugins/datatables.net-bs/css/dataTables.bootstrap.min.css" />
+   
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     @*<script src="~/my-admin-lte/plugins/jQueryUI/jquery-ui.min.js"></script>*@
     <script src="~/my-admin-lte/plugins/datatables.net/js/jquery.dataTables.min.js"></script>
@@ -55,62 +56,19 @@
                 <div class="navbar-custom-menu">
                     <ul class="nav navbar-nav">
                         <!-- Notifications: style can be found in dropdown.less -->
-                        <li class="dropdown notifications-menu">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <i class="fa fa-bell-o"></i>
-                                <span class="label label-warning">10</span>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li class="header">You have 10 notifications</li>
-                                <li>
-                                    <!-- inner menu: contains the actual data -->
-                                    <ul class="menu">
-                                        <li>
-                                            <a href="#">
-                                                <i class="fa fa-users text-aqua"></i> 5 new members joined today
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                <i class="fa fa-warning text-yellow"></i> Very long description here that may not fit into the
-                                                page and may cause design problems
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                <i class="fa fa-users text-red"></i> 5 new members joined
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                <i class="fa fa-shopping-cart text-green"></i> 25 sales made
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                <i class="fa fa-user text-red"></i> You changed your username
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li class="footer"><a href="#">View all</a></li>
-                            </ul>
-                        </li>
+                        
 
                         <!-- User Account: style can be found in dropdown.less -->
-                        <li class="dropdown user user-menu">
+                        <li class="dropdown user user-menu" >
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
 
                                 <span class="hidden-xs">@user.StaffName</span>
                             </a>
-                            <ul class="dropdown-menu">
+                            <ul class="dropdown-menu" style="width:180px; border:1px solid #ccc;">
                                 <!-- User image -->
                                 <!-- Menu Footer-->
                                 <li>
-
-                                    <div class="pull-right">
-                                        <a href="#" class="btn btn-default btn-flat">Sign out</a>
-                                    </div>
+                                      <a href="/Login/Logout?type=d" class=""><i class="fa fa-sign-out"></i>Sign out</a>
                                 </li>
                             </ul>
                         </li>
@@ -144,6 +102,7 @@
                             </a>
                             <ul class="treeview-menu">
                                 <li><a href="/Request/RequestForm"><i class="fa fa-circle-o"></i> Requistion Form</a></li>
+                                <li><a href="/Request/ViewFaveOrder"><i class="fa fa-circle-o"></i>Favourite Request</a></li>
                             </ul>
                         </li>
                     }
@@ -188,7 +147,7 @@
                     @if (user.Department.RepId == user.StaffId)
                     {
                         <li>
-                            <a href="pages/calendar.html">
+                            <a href="/Representative/DisbursementList">
                                 <i class="fa fa-calendar"></i> <span>Disbursement List</span>
                             </a>
                         </li>
@@ -201,18 +160,7 @@
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
             <!-- Content Header (Page header) -->
-            <section class="content-header">
-                <h1>
-
-                    @{
-                        if (ViewData["header"] != null)
-                        {
-                            @ViewData["header"]
-                        }
-                    }
-                </h1>
-                
-            </section>
+            
 
             <!-- Main content -->
             <section class="content">

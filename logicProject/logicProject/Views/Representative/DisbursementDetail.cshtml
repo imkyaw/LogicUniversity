@@ -1,0 +1,52 @@
+﻿@using logicProject.Models.ViewModel
+@{
+    ViewBag.Title = "Disbursement Detail";
+    DisbursementViewModel dis = ViewData["dislist"] as DisbursementViewModel;
+}
+
+<p>
+    FormId: @dis.Disbur.DisId
+</p>
+<p>Order Status: @dis.Disbur.Status</p>
+<p>Collection Date: @dis.Disbur.DisDate.Date</p>
+<p>Collection Point: @dis.CollectionPoint</p>
+<div class="box">
+    <table class="table table-responsive">
+
+        <tr>
+
+            <th>
+                Stationery Description
+            </th>
+            <th>
+                Quantity Requested
+            </th>
+            <th>
+                Quantity Received
+            </th>
+            <th>
+                Remark
+            </th>
+
+        </tr>
+        @foreach (var item in dis.Detail)
+        {
+            <tr>
+
+                <th>
+                    @Html.DisplayFor(modelItem => item.Product.Description)
+                </th>
+                <th>
+                    @Html.DisplayFor(modelItem => item.RequiredQty)
+                </th>
+                <th>
+                    @Html.DisplayFor(modelItem => item.ReceivedQty)
+                </th>
+                <th>
+                    @Html.DisplayFor(modelItem => item.Remarks)
+                </th>
+            </tr>
+        }
+    </table>
+</div>
+<a href="/Representative/DisbursementList">Back to List</a>

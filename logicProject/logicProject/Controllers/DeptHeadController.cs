@@ -9,6 +9,8 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using logicProject.Models.EF;
+using logicProject.Filter;
+
 namespace logicProject.Controllers
 {
     public class DeptHeadController : Controller
@@ -52,7 +54,8 @@ namespace logicProject.Controllers
             });
             return Json(modifiedData, JsonRequestBehavior.AllowGet);
         }
-
+        [Filter.DeptAuthorize]
+        [Custom(Roles = "head")]
         public ActionResult AppointRepresentative()
         {
             DepartmentStaff a = Session["DeptStaff"] as DepartmentStaff;
@@ -84,7 +87,8 @@ namespace logicProject.Controllers
             }
             return Json(new { isok = false, message = "Appointment Unsuccessful.", redirect = "/DeptHead/AppointRepresentative" });
         }
-
+        [Filter.DeptAuthorize]
+        [Custom(Roles = "head")]
         public ActionResult AuthorizeStaff()
         {
             DepartmentStaff a = Session["DeptStaff"] as DepartmentStaff;
@@ -155,7 +159,7 @@ namespace logicProject.Controllers
             Utility.EmailService.SendEmail(email, Utility.EmailBody.HeadSubject, message);
             return Json(new { isok = true, message = "Authorization Successful" });
         }
-
+        [Custom(Roles = "head")]
         public ActionResult DeleteAuth(int? id)
         {
             if (id == null)

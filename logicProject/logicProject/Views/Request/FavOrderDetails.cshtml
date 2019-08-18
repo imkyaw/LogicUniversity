@@ -1,0 +1,28 @@
+﻿@model IEnumerable<logicProject.Models.EF.FavOrderDetails>
+@{
+    ViewBag.Title = "FavOrderDetails";
+}
+
+<h2>FavOrderDetails</h2>
+
+<table class="table table-bordered table-responsive">
+    <tr>
+        <th>Product Description</th>
+        <th>Unit of Measure</th>
+        <th>Quantity</th>
+    </tr>
+
+    @foreach (var a in Model)
+    {
+        <tr>
+            <td>@a.Product.Description</td>
+            <td>@a.Product.Unit</td>
+            <td>@a.FavQty</td>
+        </tr>
+    }
+</table>
+
+<div>
+    @Html.ActionLink("Back to List", "ViewFaveOrder")
+</div>
+

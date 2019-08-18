@@ -1,0 +1,37 @@
+﻿@model IEnumerable<logicProject.Models.EF.FavOrder>
+
+@{
+    ViewBag.Title = "ViewFaveOrder";
+}
+
+<h2>Save Orders</h2>
+
+<p>
+    @Html.ActionLink("Create New", "CreateFavOrder")
+</p>
+<div class="box">
+    <table class="table table-responsive">
+        <tr>
+            <th>
+                Order Name
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FavOrderName)
+                </td>
+                <td>
+                    @Html.ActionLink("Details", "FavOrderDetails", new { id = item.FavOrderId }) |
+                    @Html.ActionLink("Delete", "DeleteFavOrder", new { id = item.FavOrderId })  |
+                    @Html.ActionLink("Order", "SendForOrder", new { Id = item.FavOrderId })
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>
+

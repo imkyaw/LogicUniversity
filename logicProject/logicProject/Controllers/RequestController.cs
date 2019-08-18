@@ -18,6 +18,7 @@ namespace logicProject.Controllers
     {
         private LogicEntities db = new LogicEntities();
         // GET: Request
+        [DeptAuthorize]
         [Custom(Roles = "All")]
         public ActionResult OrderStatus()
         {
@@ -25,7 +26,7 @@ namespace logicProject.Controllers
             String temp = Convert.ToBoolean(Session["TempHead"]).ToString();
             String check= Convert.ToBoolean(Session["CheckHead"]).ToString();
             ViewData["ApproveOrNot"] = null;
-            var request = db.Request.Include(d => d.Department);
+            var request = db.Request.Where(x=>x.DeptId==a.DeptId).Include(d => d.Department);
             if (a.StaffType == "head")
             {
                 ViewData["ApproveOrNot"] = true;
@@ -45,6 +46,8 @@ namespace logicProject.Controllers
             return View(request.ToList());
             
         }
+        [DeptAuthorize]
+        [Custom(Roles = "staff")]
         public ActionResult RequestForm()
         {
             ViewBag.ProductCategory = new SelectList(db.Product, "Category", "Category");
@@ -69,25 +72,24 @@ namespace logicProject.Controllers
            
             return Json(modifiedData, JsonRequestBehavior.AllowGet);
         }
-        public ActionResult CreateRequest(string products,string qty,string save)
+        public ActionResult CreateRequest(string products,string qty)
         {
             DepartmentStaff a = Session["DeptStaff"] as DepartmentStaff;
             if (products != "" && ModelState.IsValid)
             {
-                RequestDAO.AddRequest(products, qty, a.StaffId,save);
+                List<string> head = new List<string>();
+                RequestDAO.AddRequest(products, qty, a.StaffId);
+                string headname = db.DepartmentStaff.Where(x => x.DeptId == a.DeptId && x.StaffType == "head").Select(x=>x.StaffEmail).FirstOrDefault();
+                head.Add(headname);
+                string message = Utility.EmailBody.RequestBody + a.StaffName + Utility.EmailBody.RequestBody2;
+                Utility.EmailService.SendEmail(head, Utility.EmailBody.RequestSubject, message);
                 return RedirectToAction("OrderStatus","Request");
             }
             return RedirectToAction("OrderStatus", "Request");
         }
 
         //Save Request
-        public ActionResult ViewFavRequest()
-        {
-            DepartmentStaff a = Session["DeptStaff"] as DepartmentStaff;
-            List<Request> list = db.Request.Where(x => x.FavRequest == true).ToList();
-            return View();
-        }
-
+        
         //View Request Details - Wei Sheng part
         public ActionResult ViewRequestDetails(int requestId)
         {
@@ -110,7 +112,7 @@ namespace logicProject.Controllers
         }
 
         [HttpGet]
-        [Custom(Roles = "All")]
+        [Custom(Roles = "head")]
         public ActionResult GetLocation()
         {
             DepartmentStaff a = Session["DeptStaff"] as DepartmentStaff;
@@ -146,6 +148,7 @@ namespace logicProject.Controllers
             
             return Json(new { isok = true, message = "Collection Point is set.",redirect="/Departments/Dashboard",locationId=locationId });
         }
+
         [HttpPost]
         public ActionResult PostLocationApi(int locationId,int staffId)
         {
@@ -164,8 +167,10 @@ namespace logicProject.Controllers
         //Wei Sheng Part end here
         //Aprrove Or Reject - Harbinder Part
         [HttpGet]
+        [Custom(Roles = "head")]
         public ActionResult RequestApproval(int requestId)
         {
+
             List<RequestDetail> list = db.RequestDetail.Where(a => a.Request.RequestId.Equals(requestId)).ToList();
             Request req = db.Request.Where(x => x.RequestId == requestId).SingleOrDefault();
             String name = db.DepartmentStaff.Where(x => x.StaffId == req.StaffId).Select(x => x.StaffName).FirstOrDefault();
@@ -177,8 +182,11 @@ namespace logicProject.Controllers
         [HttpPost]
         public ActionResult RequestApproval(string approve, string reject, string remarks, int id)
         {
+            DepartmentStaff ds = Session["DeptStaff"] as DepartmentStaff;
             Request rd = db.Request.Find(id);
-
+            List<string> emails = new List<string>();
+            string email = db.DepartmentStaff.Where(x => x.StaffId == rd.StaffId).Select(x => x.StaffEmail).FirstOrDefault();
+            emails.Add(email);
             if (approve == "Approve")
             {
                 rd.Status = approve;
@@ -191,10 +199,118 @@ namespace logicProject.Controllers
                 rd.Remark = remarks;
                 db.SaveChanges();
             }
+            string message = Utility.EmailBody.ApproveBody + approve + ". Check for the reason  http://127.0.0.1:64451/Request/OrderStatus";
+            Utility.EmailService.SendEmail(emails, Utility.EmailBody.ApproveSubject + approve, message);
             return RedirectToAction("OrderStatus");
         }
 
+
+        //Save Favourite 
+        [HttpGet]
+        public ActionResult ViewFaveOrder()
+        {
+
+            var res = (from t in ((from r in db.Request
+                                   join rd in db.RequestDetail on r.RequestId equals rd.RequestId
+                                   where rd.ProductId == "P001"
+                                   where r.DeptId == "6"
+                                   select new
+                                   {
+                                       rdate = r.ReqDate,
+                                       qty = rd.ReqQty
+                                   }).ToList())
+                       group t by new { rdate = new DateTime(t.rdate.Year, t.rdate.Month, 1) } into g
+                       select new
+                       {
+                           date = g.Key.rdate,
+                           qty = g.Sum(x => x.qty)
+                       }).ToList();
+            List<FavOrder> list = new List<FavOrder>();
+            list = db.FavOrder.ToList();
+            return View(list);
+        }
+
+        [HttpGet]
+        public ActionResult FavOrderDetails(int id)
+        {
+            List<FavOrderDetails> fv = db.FavOrderDetails.Where(x => x.FavOrderId.Equals(id)).ToList();
+            return View(fv);
+        }
+
+        [HttpGet]
+        public ActionResult CreateFavOrder()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult CreateFavOrder(string products, string qty, string nameId)
+        {
+            DepartmentStaff ds = Session["DeptStaff"] as DepartmentStaff;
+
+            if (products != "" && ModelState.IsValid)
+            {
+                FavOrderDAO.AddRequest(products, qty, ds.StaffId, nameId);
+                return RedirectToAction("ViewFaveOrder");
+            }
+
+            return RedirectToAction("ViewFaveOrder");
+        }
+
+
+        [HttpGet]
+        public ActionResult DeleteFavOrder(int id)
+        {
+            List<FavOrderDetails> fv = db.FavOrderDetails.Where(a => a.FavOrderId.Equals(id)).ToList();
+            return View(fv);
+        }
+
+        [HttpPost]
+        public ActionResult DeleteFavOrder(string delete, int id)
+        {
+            FavOrder fv = db.FavOrder.Find(id);
+            db.FavOrder.Remove(fv);
+            db.SaveChanges();
+            return RedirectToAction("ViewFaveOrder");
+        }
+
+
+        [HttpGet]
+        public ActionResult SendForOrder(int Id)
+        {
+             List < FavOrderDetails > fv = db.FavOrderDetails.Where(a => a.FavOrderId.Equals(Id)).ToList();
+            return View(fv);
+        }
+
+        [HttpPost]
+        public ActionResult SendforOrder(int Id)
+        {
+            DateTime reqTime = DateTime.Now;
+            List<FavOrderDetails> fav = new List<FavOrderDetails>();
+            FavOrder fv = db.FavOrder.Find(Id);
+            fav = db.FavOrderDetails.Where(x => x.FavOrderId == fv.FavOrderId).ToList();
+            Request request = new Request();
+            request.DeptId = fv.DeptId;
+            request.RequestFormId = fv.FavFormId;
+            request.StaffId = fv.StaffId;
+            request.Status = "Pending";
+            request.ReqDate = reqTime;
+            db.Request.Add(request);
+            db.SaveChanges();
+            foreach(FavOrderDetails f in fav) 
+            {
+                RequestDetail rd = new RequestDetail();
+                rd.ProductId = f.ProductId;
+                rd.ReqQty = f.FavQty;
+                rd.RequestId = request.RequestId;
+                db.RequestDetail.Add(rd);
+            }
+            db.SaveChanges();
+            Request r = db.Request.Find(request.RequestId);
+            r.RequestFormId = fv.DeptId + "/" + "R0" + r.RequestId + "-" + fv.Department.DeptName;
+            db.SaveChanges();
+            return RedirectToAction("OrderStatus", "Request");
+        }
     }
-
-
+    
 }

@@ -1,0 +1,47 @@
+﻿@using logicProject.Models.ViewModel
+
+@{
+    
+    List<DisbursementViewModel> list = ViewData["dislist"] as List<DisbursementViewModel>;
+}
+
+<h2>Disbursemnet List</h2>
+
+<div class="box">
+    <table class="table table-responsive">
+        <tr>
+            
+            <th>
+                Date
+            </th>
+            <th>
+                Deliver Staff Name
+            </th>
+            <th>
+                Status
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in list)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.RequestedDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StaffName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Disbur.Status)
+            </td>
+            <td>
+                @Html.ActionLink("Details", "DisbursementDetail", new { id = item.Disbur.DisId }) |
+            </td>
+        </tr>
+        }
+
+    </table>
+</div>
+
+

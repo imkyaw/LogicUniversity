@@ -187,11 +187,12 @@
     <Compile Include="Migrations\201908160246119_lastUpdate.Designer.cs">
       <DependentUpon>201908160246119_lastUpdate.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201908160303534_addfav.cs" />
-    <Compile Include="Migrations\201908160303534_addfav.Designer.cs">
-      <DependentUpon>201908160303534_addfav.cs</DependentUpon>
+    <Compile Include="Migrations\201908160728370_addFav.cs" />
+    <Compile Include="Migrations\201908160728370_addFav.Designer.cs">
+      <DependentUpon>201908160728370_addFav.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\DAO\FavOrderDAO.cs" />
     <Compile Include="Models\DAO\RequestDAO.cs" />
     <Compile Include="Models\DBContext\LogicEntities.cs" />
     <Compile Include="Models\EF\Adjustment.cs" />
@@ -202,6 +203,8 @@
     <Compile Include="Models\EF\DepartmentStaff.cs" />
     <Compile Include="Models\EF\Disbursement.cs" />
     <Compile Include="Models\EF\DisbursementDetail.cs" />
+    <Compile Include="Models\EF\FavOrder.cs" />
+    <Compile Include="Models\EF\FavOrderDetails.cs" />
     <Compile Include="Models\EF\Product.cs" />
     <Compile Include="Models\EF\PurchaseOrder.cs" />
     <Compile Include="Models\EF\PurchaseOrderDetail.cs" />
@@ -215,12 +218,14 @@
     <Compile Include="Models\EF\SupplierProduct.cs" />
     <Compile Include="Models\ViewModel\AuthorizationViewModel.cs" />
     <Compile Include="Models\ViewModel\CategoryViewModel.cs" />
+    <Compile Include="Models\ViewModel\DisbursementViewModel.cs" />
     <Compile Include="Models\ViewModel\RequestViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility\EmailBody.cs" />
     <Compile Include="Utility\EmailService.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\AppStyle.css" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -2770,11 +2775,17 @@
     <Content Include="Views\Product\ProductCatalog.cshtml" />
     <Content Include="Views\Home\Error.cshtml" />
     <Content Include="Views\Shared\_StoreLayout.cshtml" />
-    <Content Include="Views\Request\ViewFavRequest.cshtml" />
+    <Content Include="Views\Request\ViewFaveOrder.cshtml" />
+    <Content Include="Views\Request\CreateFavOrder.cshtml" />
+    <Content Include="Views\Request\DeleteFavOrder.cshtml" />
+    <Content Include="Views\Request\SendForOrder.cshtml" />
+    <Content Include="Views\Request\FavOrderDetails.cshtml" />
+    <Content Include="Views\Representative\DisbursementList.cshtml" />
+    <Content Include="Views\Representative\DisbursementDetail.cshtml" />
+    <Content Include="Views\Login\StartPage.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Representative\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
@@ -2811,8 +2822,8 @@
     <EmbeddedResource Include="Migrations\201908160246119_lastUpdate.resx">
       <DependentUpon>201908160246119_lastUpdate.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201908160303534_addfav.resx">
-      <DependentUpon>201908160303534_addfav.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201908160728370_addFav.resx">
+      <DependentUpon>201908160728370_addFav.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
