@@ -65,15 +65,15 @@ namespace logicProject.Controllers
             if (username == null || password == null)
                 return View();
             DepartmentStaff user = db.DepartmentStaff.Where(x => x.Username == username && x.Password == password).SingleOrDefault();
+            if (user == null)
+            {
+                return View();
+            }
             DateTime today = DateTime.Now;
             int deptId = int.Parse(user.DeptId);
             Authorization authorization = db.Authorization.Where(x => x.StaffId == user.StaffId && x.StartDate<=today && x.EndDate>=today).FirstOrDefault();
             Authorization checkHead = db.Authorization.Where(x=>x.DeptId==deptId && x.StartDate <= today && x.EndDate >= today).FirstOrDefault();
             string sessionId = Guid.NewGuid().ToString();
-            if (user == null)
-            {
-                return View();
-            }
             if (user != null)
             {
                 user.SessionId = sessionId;
@@ -131,7 +131,7 @@ namespace logicProject.Controllers
             }
             
         }
-       
+       [Route]
         public ActionResult StartPage()
         {
             return View();
