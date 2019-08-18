@@ -12,7 +12,7 @@ using logicProject.Models.EF;
 
 namespace logicProject.Controllers
 {
-    
+       
     public class DepartmentsController : Controller
     {
         private LogicEntities db = new LogicEntities();

@@ -131,7 +131,7 @@ namespace logicProject.Controllers
             }
             
         }
-        [HttpGet,Route]
+       
         public ActionResult StartPage()
         {
             return View();
