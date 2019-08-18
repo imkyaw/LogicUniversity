@@ -260,6 +260,9 @@
     function checkForNullId() {
         var checklist = document.getElementsByClassName("prodId");
         var isNotNull = true;
+        if(checklist == null){
+            isNotNull = false;
+        }
         var s = document.getElementById("submitter");
         for (var i = 0; i < checklist.length; i++) {
             if (!checklist[i].value) {
