@@ -38,15 +38,23 @@ namespace logicProject.Controllers
             ViewData["category"] = category;
             return View();
         }
-        public ActionResult StockCardDetails(string id)
+        public ActionResult StockCardDetails(string id, string startDate, string endDate)
         {
             Product product = db.Product.Find(id);
 
             List<SupplierProduct> supplierproduct = db.SupplierProduct.OrderBy(pro => pro.Price).Where(pro => pro.ProductId == id).ToList();
             ViewData["supplierproduct"] = supplierproduct;
 
-            List<StockTransaction> stockCardDetails = db.StockTransaction.Where(p => p.ProductId == id).ToList();
-            ViewData["stockcarddetails"] = stockCardDetails;
+            if (startDate != null && endDate != null)
+            {
+                List<StockTransaction> stockCardDetails = db.StockTransaction.Where(p => p.ProductId == id && p.TranDate > DateTime.Parse(startDate) && p.TranDate < DateTime.Parse(endDate)).ToList();
+                ViewData["stockcarddetails"] = stockCardDetails;
+            }
+            else
+            {
+                List<StockTransaction> stockCardDetails = db.StockTransaction.Where(p => p.ProductId == id).ToList();
+                ViewData["stockcarddetails"] = stockCardDetails;
+            }
 
             return View(product);
         }

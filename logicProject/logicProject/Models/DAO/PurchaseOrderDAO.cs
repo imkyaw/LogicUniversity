@@ -95,7 +95,7 @@ namespace logicProject.Models.DAO
                 PurchaseOrder p = result.First();
                 p.Status = status;
                 p.ApprovedDate = DateTime.Now;
-                //p.remarks = remarks;  //Additional remarks column for po needed, must be able to be null
+                p.Remarks = remarks;  //Additional remarks column for po needed, must be able to be null
                 db.Entry(p).State = EntityState.Modified;
                 db.SaveChanges();
             }

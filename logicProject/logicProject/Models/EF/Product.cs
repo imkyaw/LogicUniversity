@@ -14,8 +14,11 @@ namespace logicProject.Models.EF
         public string Description { get; set; }
         public string Bin { get; set; }
         public string Unit { get; set; }
+        [Range(0, 1000000, ErrorMessage = "Value cannot be negative")]
         public int Qty { get; set; }
+        [Range(0, 1000000, ErrorMessage = "Value cannot be negative")]
         public int ReorderLevel{ get; set; }
+        [Range(0, 1000000, ErrorMessage = "Value cannot be negative")]
         public int ReorderQty { get; set; }
         public virtual ICollection<RequestDetail> RequestDetails { get; set; }
         public virtual ICollection<AdjustmentDetail> AdjustmentDetails { get; set; }
