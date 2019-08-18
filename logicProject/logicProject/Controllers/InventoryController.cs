@@ -974,6 +974,7 @@ namespace logicProject.Controllers
                 {
                     req.Status = "Delivered";
                     db.Entry(req).State = EntityState.Modified;
+                    db.SaveChanges();
                 }
             //if Qty received < Qty Requested, Generate outstanding order in requests
 

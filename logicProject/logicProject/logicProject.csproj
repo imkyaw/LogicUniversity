@@ -2861,6 +2861,7 @@
     <Content Include="Views\Supervisor\SupplierList.cshtml" />
     <Content Include="Views\Supervisor\ViewVoucherList.cshtml" />
     <Content Include="Views\Supervisor\_SupervisorLayout.cshtml" />
+    <Content Include="Views\Inventory\EditDepartmentDetails.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

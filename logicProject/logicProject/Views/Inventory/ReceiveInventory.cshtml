@@ -41,10 +41,6 @@
 <script>
     var supplierItems = [];
 
-    $(document).ready(function () {
-        addRow();
-    });
-
     $("#supplierSelect").change(function () {
         if ($("#supplierSelect").val() == "") {
             $("#detailsHeader").hide();
@@ -73,21 +69,32 @@
     function addRow() {
         var table = document.getElementById("ReceiveTable");
         var row = table.insertRow(-1);
+        row.setAttribute("class", "entry");
 
         var cell1 = row.insertCell(0);
-        var textInputNode = document.createElement("input");
-        textInputNode.setAttribute("type", "text");
-        textInputNode.setAttribute("name", "itemCode");
-        textInputNode.setAttribute("required", "true");
-        textInputNode.setAttribute("onchange", "upperCheck(this)")
-        cell1.appendChild(textInputNode);
+        var newSelect = document.createElement("select");
+        newSelect.setAttribute("class", "prodId");
+        newSelect.setAttribute("name", "itemCode");
+        newSelect.setAttribute("required", "true");
+        newSelect.setAttribute("onchange", "upperCheck(this)");
+        cell1.appendChild(newSelect);
+        var option = document.createElement("option");
+        option.value = null;
+        option.text = "";
+        newSelect.add(option);
+        for (var i = 0; i < supplierItems.length; i++) {
+            option = document.createElement("option");
+            option.value = supplierItems[i].ProductId;
+            option.text = supplierItems[i].ProductId;
+            newSelect.add(option);
+        }
 
         var cell2 = row.insertCell(1);
         var numericInputNode = document.createElement("input");
         numericInputNode.setAttribute("type", "numeric");
         numericInputNode.setAttribute("name", "ReceivedQty");
         numericInputNode.setAttribute("required", "true");
-        numericInputNode.setAttribute("min", "0");
+        numericInputNode.setAttribute("min", "1");
         cell2.appendChild(numericInputNode);
 
         var cell6 = row.insertCell(2);
