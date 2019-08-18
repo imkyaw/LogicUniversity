@@ -1,0 +1,118 @@
+﻿@using logicProject.Models.EF;
+
+@{
+    ViewBag.Title = "DetailedDisbursementList";
+    Disbursement disbursement = (Disbursement)ViewData["disbursement"];
+    List<DisbursementDetail> disbursementDetails = (List<DisbursementDetail>)ViewData["disbursementdetails"];
+    StoreStaff storeStaff = (StoreStaff)ViewData["storestaff"];
+    DepartmentStaff receiver = (DepartmentStaff)ViewData["receiver"];
+    Layout = "~/Views/Inventory/_ClerkLayout.cshtml";
+    DateTime collectionDate = disbursement.DisDate;
+    CollectionPoint collectionPoint = (CollectionPoint)ViewData["CollectionPoint"];
+    while (collectionDate.DayOfWeek != DayOfWeek.Monday)    //To adjust it to the next monday when collection occurs
+    {
+        collectionDate = collectionDate.AddDays(1);
+    }
+
+    //Written By Zhen Xiang
+}
+
+@section Styles {
+
+    <link rel="stylesheet" href="https://max.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
+}
+
+<h2>Detailed Disbursement List</h2>
+
+<p>Form Number: @disbursement.DisId</p>
+
+<p>Department: @disbursement.Department.DeptName</p>
+
+<p>Collection Point: @collectionPoint.Description</p>
+
+<p>Collection Date:@collectionDate.Date.ToString("d")</p>
+
+@using (Html.BeginForm("SetDisbursementList", "Inventory", FormMethod.Post))
+{
+    <input type="hidden" name="status" value="Delivered" />
+    <input type="hidden" name="deptId" value=@disbursement.DeptId />
+    <input type="hidden" name="id" value="@disbursement.DisId" />
+    <table id="disTable" class="table table-striped table-bordered table-sm table-responsive table-hover cell-border">
+        <tr>
+            <th>Stationery Description</th>
+            <th>Quantity Requested</th>
+            <th>Quantity Received</th>
+            <th>Remarks</th>
+        </tr>
+        @foreach (DisbursementDetail dd in disbursementDetails)
+        {
+            <tr>
+                <td>@dd.Product.Description<input type="hidden" name="productId" value="@dd.ProductId" size="5" /></td>
+                <td>@dd.RequiredQty<input type="hidden" name="requestedQty" value="@dd.RequiredQty" size="5" readonly /></td>
+                @if (disbursement.Status != "Delivered")
+                {
+                    <td><input class="numIn" type="number" name="receivedQty" min="0" required /></td>
+                    <td><input type="text" name="remarks" /></td>
+                }
+                else
+                {
+                    <td>@dd.ReceivedQty</td>
+                    <td>@dd.Remarks</td>
+                }
+            </tr>
+        }
+    </table>
+    <div id="RecOfficer">
+        <br />
+        <br />
+        <br />
+        <br />
+        <p>Receiving Officer: @receiver.StaffName</p>
+    </div>
+    <div id="StoreOfficer">
+        <br />
+        <br />
+        <br />
+        <br />
+        @if (disbursement.Status != "Delivered")
+        {
+            <p>Store Officer: </p><input type="text" name="creator" value="@storeStaff.StaffName" readonly />
+            <input type="hidden" name="creatorId" value="@storeStaff.StaffId" />
+            <input type="submit" value="Mark as Delivered" />
+        }
+        else
+        {
+            <p>Store Officer: @storeStaff.StaffName</p>
+        }
+    </div>
+
+}
+
+<style>
+
+    #RecOfficer {
+        float: left;
+        clear: left;
+    }
+
+    #StoreOfficer {
+        float: right;
+        clear: right;
+    }
+</style>
+
+@section Scripts {
+
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.6/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.html5.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#disTable').DataTable();
+        })
+    </script>
+}
+
+
+

@@ -1,0 +1,43 @@
+﻿@using logicProject.Models.EF;
+@model logicProject.Models.EF.Adjustment
+
+
+
+@{
+    ViewBag.Title = "ViewVoucherList";
+    Layout = "~/Views/Supervisor/_SupervisorLayout.cshtml";
+    List<Adjustment> cart_list = (List<Adjustment>)ViewData["cart_list"];
+    //Written by Udaya
+}
+
+<h2>Store Supervisor Voucher List</h2>
+
+<table border="1">
+    <thead>
+        <tr>
+            <td>Voucher No</td>
+            <td>Created by</td>
+            <td>Date Created</td>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in cart_list)
+        {
+
+            <tr>
+                <td>
+                    <button onclick='location.href="@Url.Action("ApproveForm","Supervisor", new RouteValueDictionary ( new { id = @item.AdjustmentId } ))"' name="button">@item.AdjustmentId</button>
+                </td>
+                <td>
+                    @item.StaffId
+                </td>
+                <td>
+                    @item.AdjustedDate
+                </td>
+            </tr>
+
+        }
+
+    </tbody>
+</table>

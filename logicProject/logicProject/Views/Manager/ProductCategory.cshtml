@@ -1,0 +1,21 @@
+﻿@model logicProject.Models.EF.Product
+@using logicProject.Models.EF
+
+@{
+    ViewBag.Title = "ProductCategory";
+    var categories = (List<String>)ViewData["category"];
+    Layout = "~/Views/Manager/_ManagerLayout.cshtml";
+    //var products = (List<Product>)ViewData["products"];
+    //Written By Antonio
+
+}
+
+<h2>STATIONERY CATALOGUE</h2>
+<p>Please select a category : </p>
+<ul>
+    @foreach (var ctgry in categories)
+    {
+        <li>@Html.ActionLink(ctgry, "ProductDetails", new { category = ctgry })</li>
+    }
+
+</ul>

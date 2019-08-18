@@ -1,0 +1,73 @@
+﻿@using logicProject.Models.EF;
+
+@{
+    ViewBag.Title = "DetailedPO";
+    PurchaseOrder po = (PurchaseOrder)ViewData["PO"];
+    StoreStaff creator = (StoreStaff)ViewData["creator"];
+    Supplier supplier = (Supplier)ViewData["supplier"];
+    List<PurchaseOrderDetail> poDetails = (List<PurchaseOrderDetail>)ViewData["poDetails"];
+    List<SupplierProduct> priceList = (List<SupplierProduct>)ViewData["priceList"];
+    Layout = "~/Views/Inventory/_ClerkLayout.cshtml";
+    double subtotal = 0;
+    //Written by Zhen Xiang
+}
+<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+
+@section Styles {
+
+    <link rel="stylesheet" href="https://max.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
+}
+
+<h2>PO number: @po.OrderId</h2>
+
+<p>Supplier: @supplier.SupplierName</p>
+
+<p>Created by: @creator.StaffName</p>
+
+<p>Created on: @po.OrderDate</p>
+
+@if (po.Status == "Approved")
+{
+    <p>Approved on: @po.ApprovedDate</p>
+}
+
+<table id="detailTable" class="table table-striped table-bordered table-sm table-responsive table-hover cell-border">
+    <tr>
+        <th>Item Code</th>
+        <th>Description</th>
+        <th>Quantity</th>
+        <th>Unit of Measure</th>
+        <th>Unit Price</th>
+        <th>Total</th>
+    </tr>
+    @foreach (PurchaseOrderDetail pod in poDetails)
+    {
+
+        <tr>
+            <td>@pod.ProductId</td>
+            <td>@pod.Product.Description</td>
+            <td>@pod.ReqQty</td>
+            <td>@pod.Product.Unit</td>
+            <td>@priceList.Find(x => x.ProductId == pod.ProductId).Price</td>
+            <td>@(priceList.Find(x => x.ProductId == pod.ProductId).Price * pod.ReqQty)</td>
+        </tr>
+        subtotal = subtotal + priceList.Find(x => x.ProductId == pod.ProductId).Price * pod.ReqQty;
+    }
+    <tr>
+        <td colspan="5" align="right">Subtotal: </td>
+        <td>@subtotal</td>
+    </tr>
+</table>
+
+@section Scripts {
+
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.6/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.html5.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#detailTable').DataTable();
+        })
+    </script>
+}

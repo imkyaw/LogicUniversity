@@ -1,0 +1,56 @@
+﻿@model IEnumerable<logicProject.Models.ViewModel.ItemSuppliedViewModel>
+@using logicProject.Models.EF
+
+@{
+    ViewBag.Title = "ItemSupplied";
+    var suppro = (SupplierProduct)ViewData["supplierproducts"];
+    Layout = "~/Views/Inventory/_ClerkLayout.cshtml";
+    //Written by Antonio
+
+}
+
+<h2>Item Supplied</h2>
+
+<p>SUPPLIER CODE : @suppro.SupplierId</p>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.product.ProductId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.product.Category)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.product.Description)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.supplierproduct.Price)
+        </th>
+    </tr>
+
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(n => item.product.ProductId)
+            </td>
+            <td>
+                @Html.DisplayFor(n => item.product.Category)
+            </td>
+            <td>
+                @Html.DisplayFor(n => item.product.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(n => item.supplierproduct.Price)
+            </td>
+            <td>
+            </td>
+        </tr>
+    }
+</table>
+
+<div>
+    @Html.ActionLink("Back to Supplier List", "SupplierList")
+</div>

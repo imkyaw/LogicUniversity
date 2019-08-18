@@ -1,0 +1,70 @@
+﻿@using logicProject.Models.EF;
+@using logicProject.Models.ViewModel;
+
+@{
+    ViewBag.Title = "CreateRetrievalForm";
+    List<RetrievalViewModel> retrieval = (List<RetrievalViewModel>)ViewData["Retrieval"];
+    Layout = "~/Views/Inventory/_ClerkLayout.cshtml";
+    //Written By Zhen Xiang
+}
+
+@section Styles {
+
+    <link rel="stylesheet" href="https://max.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
+}
+
+<h2>Inventory Retrieval Form</h2>
+
+
+@using (Html.BeginForm("WithdrawItems", "Inventory", FormMethod.Post))
+{
+    <table id="withdrawalTable" class="table table-striped table-bordered table-sm table-responsive table-hover cell-border">
+        <tr>
+            <th>Bin No.</th>
+            <th>Item Code</th>
+            <th class="c1">Description</th>
+            <th>Requested</th>
+            <th class="collapse2">In Store</th>
+            <th>Retrieved</th>
+        </tr>
+
+        @foreach (var r in retrieval)
+        {
+            <tr>
+                <td>@r.Product.Bin</td>
+                <td><input type="text" size="3" name="itemCode" value="@r.Product.ProductId" /></td>
+                <td class="c1">@r.Product.Description</td>
+                <td>@r.Quantity</td>
+                <td class="collapse2">@r.MaxQuantity</td>
+                <td><input type="number" name="qtyRetrieved" min="0" max="@r.MaxQuantity" required /></td>
+            </tr>
+        }
+    </table>
+    <input type="submit" value="Submit" />
+}
+
+@section Scripts {
+
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.6/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.html5.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#withdrawalTable').DataTable();
+        })
+    </script>
+
+    <style>
+        @@media screen and (max-width: 600px)
+        {
+            .c1, .collapse2
+            {
+                display: none;
+            }
+        }
+    </style>
+}
+
+
+

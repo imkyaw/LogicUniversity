@@ -1,0 +1,61 @@
+﻿@using logicProject.Models.EF;
+@model logicProject.Models.EF.AdjustmentDetail
+
+
+@{
+    ViewBag.Title = "ApproveForm";
+    //Written by Udaya
+    Layout = "~/Views/Manager/_ManagerLayout.cshtml";
+    List<AdjustmentDetail> cart_list = (List<AdjustmentDetail>)ViewData["cart_list"];
+    StoreStaff user = (StoreStaff)Session["user"];
+
+}
+
+<h2>Approve Inventory Adjustment Status</h2>
+
+<table>
+    <thead>
+        <tr>
+            <td>
+                Product code
+            </td>
+            <td>
+                Qty
+            </td>
+            <td>
+                Unit price
+            </td>
+            <td>
+                Total price
+            </td>
+            <td>
+                Reason
+            </td>
+        </tr>
+    </thead>
+
+    @if (cart_list != null)
+    {
+        foreach (var item in cart_list)
+        {
+            <tr>
+                <td>
+                    @item.ProductId
+                </td>
+                <td>
+                    @item.Qty
+                </td>
+                <td>
+                    @item.UnitPrice
+                </td>
+                <td>
+                    @item.TotalPrice
+                </td>
+                <td>
+                    @item.reason
+                </td>
+            </tr>
+        }
+    }
+
+</table>

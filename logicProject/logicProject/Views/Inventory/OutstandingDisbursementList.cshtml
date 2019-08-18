@@ -1,0 +1,33 @@
+﻿@using logicProject.Models.EF;
+
+@{
+    ViewBag.Title = "OutstandingDisbursementList";
+    List<Department> departments = (List<Department>)ViewData["departments"];
+    Layout = "~/Views/Inventory/_ClerkLayout.cshtml";
+    //Written By Zhen Xiang, unused
+}
+
+<h2>Outstanding Disbursement List</h2>
+
+<p>Here are the departments that have ordered goods this week. Please click on the link to generate their disbursement list</p>
+
+@if (departments.Count != 0)
+{
+    <table>
+        <tr>
+            <th>Department Name</th>
+        </tr>
+        @foreach (Department d in departments)
+        {
+            <tr>
+                <td>@Html.ActionLink(d.DeptName, "GenerateDisbursementList", new { deptId = d.DeptId })</td>
+            </tr>
+        }
+    </table>
+}
+else
+{
+    <p>There are no departments where a disbursement list needs to be generated.</p>
+}
+
+

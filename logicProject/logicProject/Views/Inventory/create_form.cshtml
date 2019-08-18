@@ -1,0 +1,146 @@
+﻿@using logicProject.Models.EF;
+@using logicProject.Models.ViewModel;
+@model logicProject.Models.EF.AdjustmentDetail
+@{//Written by Udaya
+    ViewBag.Title = "create_form";
+    string msg = (string)ViewData["msg"];
+    Layout = "~/Views/Inventory/_ClerkLayout.cshtml";
+    List<ProductViewModel> items = (List<ProductViewModel>)ViewData["items"];
+    int form_number = (int)ViewData["form_number"];
+    List<AdjustmentDetail> cart_list = (List<AdjustmentDetail>)ViewData["cart_list"];
+    StoreStaff user = (StoreStaff)Session["StoreStaff"];
+
+    @functions {
+        double GetPriceById(string id)
+        {
+            List<ProductViewModel> items = (List<ProductViewModel>)ViewData["items"];
+            foreach (var item in items)
+            {
+                if (id.Equals(item.ProductId))
+                    return item.UnitPrice;
+            }
+            return 0;
+        }
+    }
+
+}
+
+<script type="text/javascript">
+    function onChange() {
+        var e = document.getElementById("itemId");
+        console.log(e.options[e.selectedIndex].value);
+        var res = e.options[e.selectedIndex].value;
+        var out = res.split("-")
+        var etochange = document.getElementById("u_price");
+        etochange.value = out[1];
+        document.getElementById("itemCode").value = out[0];
+        document.getElementById("qty").value = "";
+        document.getElementById("t_price").value = "";
+    };
+    function onChange_qty() {
+        var e = document.getElementById("qty").value;
+        var p = document.getElementById("u_price").value;
+        var res = e * p;
+        console.log(p)
+        console.log(e.value);
+
+        document.getElementById("t_price").value = res;
+    };
+</script>
+<h2>Create Adjustment Voucher</h2>
+
+<table>
+    <thead>
+        <tr>
+            <td>
+                Product code
+            </td>
+            <td>
+                Description
+            </td>
+            <td>
+                Qty
+            </td>
+            <td>
+                Unit price
+            </td>
+            <td>
+                Total price
+            </td>
+            <td>
+                Reason
+            </td>
+        </tr>
+    </thead>
+    @if (cart_list != null)
+    {
+        foreach (var item in cart_list)
+        {
+            <tr>
+                <td>
+                    @item.Product.ProductId
+                </td>
+                <td>
+                    @item.Product.Description
+                </td>
+                <td>
+                    @item.Qty
+                </td>
+                <td>
+                    @GetPriceById(item.Product.ProductId)
+                </td>
+                <td>
+                    @(Convert.ToInt32(item.Qty) * Convert.ToInt32(GetPriceById(item.Product.ProductId)))
+                </td>
+                <td>
+                    @item.reason
+                </td>
+            </tr>
+        }
+    }
+
+
+    @using (Html.BeginForm("addnew", "Inventory", FormMethod.Post))
+    {
+        @Html.HiddenFor(x => x.AdjustmentId, new { Value = @form_number })
+        {
+            <tr>
+                <td>
+                    @Html.TextBoxFor(x => x.ProductId, new { id = "itemCode", @Value = "" })
+                </td>
+                <td>
+                    @Html.DropDownList("Select Item", items.Select(item => new SelectListItem { Text = item.Description, Value = item.ProductId + "-" + item.UnitPrice }), new { id = "itemId", onchange = "onChange()" })
+                </td>
+                <td>
+                    @Html.TextBoxFor(x => x.Qty, new { id = "qty", oninput = "onChange_qty()", placeholder = "Enter Quantity", required = "required" })
+                </td>
+                <td>
+                    @Html.TextBoxFor(x => x.UnitPrice, new { id = "u_price", @readonly = "readonly" })
+                </td>
+                <td>
+                    @Html.TextBoxFor(x => x.TotalPrice, new { id = "t_price", @readonly = "readonly" })
+                </td>
+                <td>
+                    @Html.TextBoxFor(x => x.reason, new { placeholder = "Enter Remarks" })
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="submit" value="addnew">
+                </td>
+            </tr>
+        }
+    }
+
+
+</table>
+
+@if (cart_list != null)
+{
+    using (Html.BeginForm("submitrequest", "Inventory", FormMethod.Post))
+    {
+        <input type="hidden" value="@form_number" name="form_number" />
+        <input type="hidden" value="@user.StaffId" name="emp_id" />
+        <input type="submit" value="Confirm and Send Request">
+    }
+}

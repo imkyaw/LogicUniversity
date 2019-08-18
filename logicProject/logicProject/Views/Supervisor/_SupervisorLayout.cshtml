@@ -1,0 +1,193 @@
+﻿<!DOCTYPE html>
+<html>
+@using logicProject.Models.EF;
+@{
+    StoreStaff storeStaff = (StoreStaff)HttpContext.Current.Session["StoreStaff"];
+    //bool tempHead = (bool)HttpContext.Current.Session["TempHead"];
+    //bool check = (bool)HttpContext.Current.Session["CheckHead"];
+}
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+
+    <link rel="stylesheet" href="~/Content/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="~/my-admin-lte/plugins/font-awesome/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="~/my-admin-lte/plugins/Ionicons/">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/my-admin-lte/css/AdminLTE.min.css">
+
+    <link rel="stylesheet" href="~/my-admin-lte/css/skins/skin-black-light.css">
+
+    <link href="~/my-admin-lte/plugins/select2/dist/css/select2.min.css" rel="stylesheet" />
+    <!-- Date Picker -->
+    <link rel="stylesheet" href="~/my-admin-lte/plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
+
+
+    <!-- Daterange picker -->
+
+
+
+
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    @*<script src="~/my-admin-lte/plugins/jQueryUI/jquery-ui.min.js"></script>*@
+    <script src="~/my-admin-lte/plugins/datatables.net/js/jquery.dataTables.min.js"></script>
+
+    <script src="~/my-admin-lte/plugins/select2/dist/js/select2.full.min.js"></script>
+
+    <script src="~/my-admin-lte/plugins/moment/moment.js"></script>
+    <script src="~/my-admin-lte/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    <script src="~/my-admin-lte/js/adminlte.min.js"></script>
+
+</head>
+<body class="hold-transition skin-black-light sidebar-mini">
+    <div class="wrapper">
+        <header class="main-header">
+            <!-- Logo -->
+            <a href="~/Supervisor/Index" class="logo">
+                <!-- mini logo for sidebar mini 50x50 pixels -->
+                <span class="logo-mini"><b>L</b></span>
+                <!-- logo for regular state and mobile devices -->
+                <span class="logo-lg"><b>LOGIC</b></span>
+            </a>
+            <!-- Header Navbar: style can be found in header.less -->
+            <nav class="navbar navbar-static-top">
+                <!-- Sidebar toggle button-->
+                <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+                    <span class="sr-only">Toggle navigation</span>
+                </a>
+
+                <div class="navbar-custom-menu">
+                    <ul class="nav navbar-nav">
+                        
+                        <!-- User Account: style can be found in dropdown.less -->
+                        <li class="dropdown user user-menu">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+
+                                <span class="hidden-xs">@storeStaff.StaffName</span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <!-- User image -->
+                                <li class="user-header">
+
+
+                                    <p>
+                                        @storeStaff.StaffName
+                                    </p>
+                                </li>
+                                <!-- Menu Body -->
+                                <li class="user-body">
+                                    <div class="row">
+   
+                                    </div>
+                                    <!-- /.row -->
+                                </li>
+                                <!-- Menu Footer-->
+                                <li class="user-footer">
+                                    <div class="pull-left">
+                                        @*<a href="#" class="btn btn-default btn-flat">Profile</a>*@
+                                    </div>
+                                    <div class="pull-right">
+                                        <a href="~/login/logout" class="btn btn-default btn-flat">Sign out</a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <!-- Left side column. contains the logo and sidebar -->
+        <aside class="main-sidebar">
+            <!-- sidebar: style can be found in sidebar.less -->
+            <section class="sidebar">
+                <!-- Sidebar user panel -->
+                <!-- /.search form -->
+                <!-- sidebar menu: : style can be found in sidebar.less -->
+                <ul class="sidebar-menu" data-widget="tree">
+                    <li class="header">@storeStaff.StaffType</li>
+                    <li>
+                        <a href="~/Supervisor/ProductCategory">
+                            <i class="fa fa-dashboard"></i> <span>Product Catalogue</span>
+                        </a>
+                    </li>
+                    <li class="treeview">
+                        <a href="~/Supervisor/SupplierList">
+                            <i class="fa fa-files-o"></i>
+                            <span>Supplier Information</span>
+                        </a>
+                    </li>
+                    <li class="treeview">
+                        <a href="~/Supervisor/DepartmentDetails">
+                            <i class="fa fa-files-o"></i>
+                            <span>Department Details</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="~/Supervisor/FindPO">
+                            <i class="fa fa-th"></i> <span>Purchase Orders</span>
+                        </a>
+                    </li>
+                    <li class="treeview">
+                        <a href="~/Supervisor/ViewVoucherList">
+                            <i class="fa fa-pie-chart"></i>
+                            <span>Adjustment Voucher</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+
+                    </li>
+                    <li class="treeview">
+                        <a href="~/Supervisor/Chart">
+                            <i class="fa fa-files-o"></i>
+                            <span>Charting</span>
+                        </a>
+                    </li>
+
+                </ul>
+            </section>
+            <!-- /.sidebar -->
+        </aside>
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper" style="min-height:640px">
+            <!-- Content Header (Page header) -->
+            <section class="content-header">
+                <h1>
+
+                    @{
+                        if (ViewData["header"] != null)
+                        {
+                            @ViewData["header"]
+                        }
+                    }
+                    <!-- <small>Control panel</small>-->
+                </h1>
+                <ol class="breadcrumb">
+                    <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+                    <li class="active">Dashboard</li>
+                </ol>
+            </section>
+
+            <!-- Main content -->
+            <section class="content">
+                @RenderBody()
+            </section>
+            <!-- /.content -->
+        </div>
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+
+    @Scripts.Render("~/my-admin-lte/js")
+
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="~/my-admin-lte/plugins/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+    @RenderSection("scripts", required: false)
+    @RenderSection("styles", required: false)
+</body>
+</html>
+

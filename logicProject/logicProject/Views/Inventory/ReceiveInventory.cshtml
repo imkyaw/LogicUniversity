@@ -1,0 +1,124 @@
+﻿@using logicProject.Models.EF;
+
+@{
+    ViewBag.Title = "ReceiveInventory";
+    List<Supplier> suppliers = (List<Supplier>)ViewData["suppliers"];
+    Layout = "~/Views/Inventory/_ClerkLayout.cshtml";
+}
+<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+
+<h2>Receive Inventory</h2>
+
+@using (Html.BeginForm("AddManyItems", "Inventory", FormMethod.Post, new { id = "ReceieveIntForm" }))
+{
+    <p>Date Receieved: <input type="date" name="date" required/></p>
+    <p>Supplier:</p>
+    <select id="supplierSelect" name="supplierId">
+        <option value="">Select Supplier</option>
+        @foreach (var s in suppliers)
+        {
+            <option value="@s.SupplierId">@s.SupplierName</option>
+        }
+    </select>
+    <br />
+    <p id="detailsHeader" hidden>Details: </p>
+    <textarea id="comments" name="comments" form="ReceiveIntForm" rows="2" cols="30" required hidden></textarea>
+    <br />
+    <br />
+    <table id="ReceiveTable" hidden>
+        <tr>
+            <th>Product Id</th>
+            <th>Quantity Received</th>
+            <th></th>
+        </tr>
+    </table>
+    <br />
+    <input id="addrow" type="button" value="Add Row" onclick="addRow()" />
+    <br />
+    <input id="submitter" type="submit" value="submit" disabled hidden/>
+}
+
+<script>
+    var supplierItems = [];
+
+    $(document).ready(function () {
+        addRow();
+    });
+
+    $("#supplierSelect").change(function () {
+        if ($("#supplierSelect").val() == "") {
+            $("#detailsHeader").hide();
+            $("#submitter").hide();
+            $("#addrow").hide();
+            $("#comments").hide();
+            $("#ReceiveTable").hide();
+        }
+        else {
+            $("#detailsHeader").show();
+            $("#submitter").show();
+            $("#addrow").show();
+            $("#comments").show();
+            $("#ReceiveTable").show();
+            var txt = $("#supplierSelect").val();
+            $.post("/inventory/getsupplieritemprices",
+                { supplierId: txt },
+                function (data, status) {
+                    if (status == "success") {
+                        supplierItems = JSON.parse(data);
+                    };
+                });
+        }
+    });
+
+    function addRow() {
+        var table = document.getElementById("ReceiveTable");
+        var row = table.insertRow(-1);
+
+        var cell1 = row.insertCell(0);
+        var textInputNode = document.createElement("input");
+        textInputNode.setAttribute("type", "text");
+        textInputNode.setAttribute("name", "itemCode");
+        textInputNode.setAttribute("required", "true");
+        textInputNode.setAttribute("onchange", "upperCheck(this)")
+        cell1.appendChild(textInputNode);
+
+        var cell2 = row.insertCell(1);
+        var numericInputNode = document.createElement("input");
+        numericInputNode.setAttribute("type", "numeric");
+        numericInputNode.setAttribute("name", "ReceivedQty");
+        numericInputNode.setAttribute("required", "true");
+        numericInputNode.setAttribute("min", "0");
+        cell2.appendChild(numericInputNode);
+
+        var cell6 = row.insertCell(2);
+        var buttonNode = document.createElement("input");
+        buttonNode.setAttribute("type", "button");
+        buttonNode.setAttribute("value", "Remove");
+        buttonNode.setAttribute("onclick", "deleteRow(this)");
+        cell6.appendChild(buttonNode);
+    }
+
+    function deleteRow(x) {
+        p = x.parentNode.parentNode;
+        p.parentNode.removeChild(p);
+    }
+
+    function upperCheck(x) {
+        x.value = x.value.toUpperCase();
+        var idCheck = x.value;
+        var matched = supplierItems.find(findItem);
+        function findItem(value) {
+            return value.ProductId == idCheck
+        }
+        var s = document.getElementById("submitter");
+        if (matched === undefined) {
+            s.disabled = true;
+        }
+        else {
+            s.disabled = false;
+        }
+    }
+</script>
+
+
+

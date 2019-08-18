@@ -1,0 +1,78 @@
+﻿@using logicProject.Models.EF
+@model logicProject.Models.EF.Product
+
+
+@{
+    ViewBag.Title = "ProductDetails";
+    var products = (List<Product>)ViewData["productdetails"];
+    string category = (string)ViewData["category"];
+    Layout = "~/Views/Inventory/_ClerkLayout.cshtml";
+    //Written By Antonio
+}
+
+<h2>Product List</h2>
+
+<h4>Category: @category</h4>
+
+<button>
+    @Html.ActionLink("Add New Item", "CreateProduct")
+</button>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(mod => mod.ProductId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(mod => mod.Category)
+        </th>
+        <th>
+            @Html.DisplayNameFor(mod => mod.Description)
+        </th>
+        <th>
+            @Html.DisplayNameFor(mod => mod.Unit)
+        </th>
+        <th>
+            @Html.DisplayNameFor(mod => mod.ReorderLevel)
+        </th>
+        <th>
+            @Html.DisplayNameFor(mod => mod.ReorderQty)
+        </th>
+        <th>
+            Actions
+        </th>
+    </tr>
+
+    @foreach (var product in products)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(mod => product.ProductId)
+            </td>
+            <td>
+                @Html.DisplayFor(mod => product.Category)
+            </td>
+            <td>
+                @Html.DisplayFor(mod => product.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(mod => product.Unit)
+            </td>
+            <td>
+                @Html.DisplayFor(mod => product.ReorderLevel)
+            </td>
+            <td>
+                @Html.DisplayFor(mod => product.ReorderQty)
+            </td>
+            <td>
+                @Html.ActionLink("Stock Card", "StockCardDetails", new { id = product.ProductId }) |
+                @Html.ActionLink("Edit", "EditProduct", new { id = product.ProductId }) |
+                @Html.ActionLink("Remove", "DeleteProduct", new { id = product.ProductId })
+            </td>
+        </tr>
+    }
+</table>
+
+<div>
+    @Html.ActionLink("Back to Category", "ProductCategory")
+</div>

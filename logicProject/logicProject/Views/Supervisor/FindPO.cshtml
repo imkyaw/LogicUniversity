@@ -1,0 +1,64 @@
+﻿@using logicProject.Models.EF;
+
+@{
+    ViewBag.Title = "FindPO";
+    List<PurchaseOrder> purchaseOrders = (List<PurchaseOrder>)ViewData["purchaseOrders"];
+    List<StoreStaff> creators = (List<StoreStaff>)ViewData["creators"];
+    Layout = "~/Views/Supervisor/_SupervisorLayout.cshtml";
+    //Written by Zhen Xiang
+}
+
+<h2>Find Purchase Order</h2>
+
+<p>Welcome to the PO page. Please search for the PO using the options provided</p>
+
+@using (Html.BeginForm("FindPO", "Supervisor", FormMethod.Post))
+{
+    <select name="status">
+        <option value=""></option>
+        <option value="Pending">Pending</option>
+        <option value="Approved">Approved</option>
+        <option value="Rejected">Rejected</option>
+    </select>
+    <br />
+    <input type="submit" value="Search By Status" />
+    <br />
+}
+
+@using (Html.BeginForm("FindPO", "Supervisor", FormMethod.Post))
+{
+    <p>Creation Date Range:</p>
+    <p>From: <input type="date" name="startDate"> To: <input type="date" name="endDate" /></p>
+    <br />
+    <input type="submit" value="Search By Date" />
+    <br />
+}
+
+@*@using (Html.BeginForm("FindPO", "Supervisor", FormMethod.Post))
+{
+    <p>PO Number: <input type="text" name="PONumber" /></p>
+    <br />
+    <input type="submit" value="Search by PO number" />
+    <br />
+}*@
+
+@if (purchaseOrders.Count != 0)
+{
+    <table>
+        <tr>
+            <th>PO Number</th>
+            <th>Creating Officer</th>
+            <th>Creation Date</th>
+            <th>Status</th>
+        </tr>
+        @foreach (PurchaseOrder po in purchaseOrders)
+        {
+            <tr>
+                <td>@Html.ActionLink(po.OrderId.ToString(), "DetailedPO", "Supervisor", new { id = po.OrderId }, null)</td>
+                <td>@creators.Find(x => x.StaffId == po.StaffId).StaffName</td>
+                <td>@po.OrderDate.Date.ToString("d")</td>
+                <td>@po.Status</td>
+            </tr>
+        }
+    </table>
+}

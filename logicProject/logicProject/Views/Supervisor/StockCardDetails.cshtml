@@ -1,0 +1,92 @@
+﻿@model logicProject.Models.EF.Product
+@using logicProject.Models.EF
+
+@{
+    ViewBag.Title = "StockCardDetails";
+    var supplierproduct = (List<SupplierProduct>)ViewData["supplierproduct"];
+    var stockcarddetails = (List<StockTransaction>)ViewData["stockcarddetails"];
+    Layout = "~/Views/Supervisor/_SupervisorLayout.cshtml";
+    //Written By Antonio
+}
+
+<h2>Stock Card Details</h2>
+
+<dl class="dl-horizontal">
+    <dt>
+        @Html.DisplayNameFor(model => model.ProductId)
+    </dt>
+
+    <dd>
+        @Html.DisplayFor(model => model.ProductId)
+    </dd>
+    <dt>
+        @Html.DisplayNameFor(model => model.Description)
+    </dt>
+
+    <dd>
+        @Html.DisplayFor(model => model.Description)
+    </dd>
+    <dt>
+        @Html.DisplayNameFor(model => model.Bin)
+    </dt>
+
+    <dd>
+        @Html.DisplayFor(model => model.Bin)
+    </dd>
+    <dt>
+        @Html.DisplayNameFor(model => model.Unit)
+    </dt>
+
+    <dd>
+        @Html.DisplayFor(model => model.Unit)
+    </dd>
+</dl>
+
+<p>Supplier : </p>
+<ol>
+    @foreach (var item in supplierproduct)
+    {
+        <li>@Html.DisplayFor(mod => item.SupplierId)</li>
+    }
+</ol>
+
+<table class="table">
+    <tr>
+        <th>
+            Date
+        </th>
+        <th>
+            Qty
+        </th>
+        <th>
+            Total Balance
+        </th>
+        <th>
+            Remarks
+        </th>
+    </tr>
+
+    @foreach (var item in stockcarddetails)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(mod => item.TranDate)
+            </td>
+            <td>
+                @Html.DisplayFor(mod => item.Qty)
+            </td>
+            <td>
+                @Html.DisplayFor(mod => item.TotalBalance)
+            </td>
+            <td>
+                @Html.DisplayFor(mod => item.Remarks)
+            </td>
+        </tr>
+    }
+
+</table>
+
+
+<div>
+    @Html.ActionLink("Back to List", "ProductDetails", new { category = Model.Category })
+</div>

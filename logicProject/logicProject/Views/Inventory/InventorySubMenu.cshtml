@@ -1,0 +1,21 @@
+﻿
+@{
+    ViewBag.Title = "InventorySubMenu";
+    Layout = "~/Views/Inventory/_ClerkLayout.cshtml";
+}
+
+<h2>Inventory Management</h2>
+
+<p>This is the inventory management page. Please navigate to the respective menus using the links provided</p>
+<br />
+@Html.ActionLink("Receive Inventory from Suppliers", "ReceiveInventory")
+<br />
+@Html.ActionLink("Withdraw Inventory from Store", "CreateRetrievalForm")
+<br />
+@Html.ActionLink("View Requests", "RequestsList")
+<br />
+@Html.ActionLink("View Inventory", "ViewInventory")
+<br />
+
+
+

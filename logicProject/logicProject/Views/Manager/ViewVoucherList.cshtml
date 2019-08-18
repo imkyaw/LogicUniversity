@@ -1,0 +1,43 @@
+﻿@using logicProject.Models.EF;
+@model logicProject.Models.EF.Adjustment
+
+@{
+    ViewBag.Title = "ViewVoucherList";
+
+    List<Adjustment> cart_list = (List<Adjustment>)ViewData["cart_list"];
+    StoreStaff user = (StoreStaff)Session["user"];
+    Layout = "~/Views/Manager/_ManagerLayout.cshtml";
+    //Written By Udaya
+}
+
+<h2>Store Manager Voucher List</h2>
+
+<table border="1">
+    <thead>
+        <tr>
+            <td>Voucher No</td>
+            <td>Created by</td>
+            <td>Date Created</td>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in cart_list)
+        {
+
+            <tr>
+                <td>
+                    <button onclick='location.href="@Url.Action("ApproveForm","Manager", new RouteValueDictionary ( new { id = @item.AdjustmentId } ))"' name="button">@item.AdjustmentId</button>
+                </td>
+                <td>
+                    @item.StaffId
+                </td>
+                <td>
+                    @item.AdjustedDate
+                </td>
+            </tr>
+
+        }
+
+    </tbody>
+</table>

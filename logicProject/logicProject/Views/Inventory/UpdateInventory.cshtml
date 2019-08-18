@@ -1,0 +1,18 @@
+﻿
+@{
+    ViewBag.Title = "UpdateInventory";
+    Layout = "~/Views/Inventory/_ClerkLayout.cshtml";
+    //Written By Zhen Xiang
+}
+
+<h2>Update Item Quantity</h2>
+
+@using (Html.BeginForm("UpdateInventory","Inventory", FormMethod.Post))
+{
+    <p>Date: <input type="date" name="date" /></p>
+    <p>Item Code: <input type="text" name="itemCode" /></p>
+    <p><input type="text" name="quantity" /></p>
+    <p>Add Inventory: <input type="radio" name="purpose" value="Addition" />  Withdraw Inventory: <input type="radio" name="purpose" value="Withdrawal" /></p>
+    <p>Transaction Details: <input type="text" name="transactionDetails" /></p>
+    <input type="submit" value="submit" />
+}

@@ -1,0 +1,82 @@
+﻿@model IEnumerable<logicProject.Models.ViewModel.ViewModelDepartment>
+
+@{
+    ViewBag.Title = "DepartmentDetails";
+    Layout = "~/Views/Supervisor/_SupervisorLayout.cshtml";
+    //Coded by Antonio
+}
+
+<h2>Department Details</h2>
+
+<table class="table">
+
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.department.DeptId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.department.DeptName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.department.ContactName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.department.PhNo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.department.FaxNo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.department.EmailAddr)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.collectionpoint.CollectionPt)
+        </th>
+        <th>
+            Head Name
+        </th>
+        <th>
+            Rep Name
+        </th>
+        <th>
+            Actions
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.department.DeptId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.department.DeptName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.department.ContactName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.department.PhNo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.department.FaxNo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.department.EmailAddr)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.collectionpoint.CollectionPt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.headname)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Repname)
+            </td>
+            <td>
+
+            </td>
+        </tr>
+    }
+
+</table>

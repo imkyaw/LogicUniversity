@@ -1,0 +1,77 @@
+﻿@using logicProject.Models.EF;
+
+@{
+    ViewBag.Title = "FindDisbursementList";
+    List<Department> departments = (List<Department>)ViewData["departments"];
+    List<Disbursement> disbursements = (List<Disbursement>)ViewData["disbursements"];
+    Layout = "~/Views/Inventory/_ClerkLayout.cshtml";
+    //Written by Zhen Xiang
+}
+
+@section Styles {
+
+    <link rel="stylesheet" href="https://max.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
+}
+
+<h2>Find Disbursement List</h2>
+
+<p>Welcome to the Disbursement list page. Please search for the Disbursement using the options provided</p>
+
+<br />
+@using (Html.BeginForm("FindDisbursementList", "Inventory", FormMethod.Post))
+{
+    <select name="deptId">
+        <option value=""></option>
+        @foreach (Department d in departments)
+        {
+            <option value="@d.DeptId">@d.DeptName</option>
+        }
+    </select>
+    <br />
+    <input type="submit" value="Search By Department" />
+    <br />
+    <br />
+}
+
+@using (Html.BeginForm("FindDisbursementList", "Inventory", FormMethod.Post))
+{
+    <p>Start Date: <input type="date" name="startDate" required /> End Date: <input type="date" name="endDate" required /></p>
+    <br />
+    <input type="submit" value="Search By Date" />
+    <br />
+    <br />
+}
+
+@if (disbursements.Count != 0)
+{
+    <table id="disTable" class="table table-striped table-bordered table-sm table-responsive table-hover cell-border">
+        <tr>
+            <th>Form Id</th>
+            <th>Date Created</th>
+            <th>Department</th>
+            <th>Status</th>
+        </tr>
+        @foreach (Disbursement d in disbursements)
+        {
+            <tr>
+                <td>@Html.ActionLink(d.DisId.ToString(), "DetailedDisbursementList", "Inventory", new { id = d.DisId }, null)</td>
+                <td>@d.DisDate.Date.ToString("d")</td>
+                <td>@d.DeptId</td>
+                <td>@d.Status</td>
+            </tr>
+        }
+    </table>
+}
+
+@section Scripts {
+
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.6/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.html5.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#disTable').DataTable();
+        })
+    </script>
+}

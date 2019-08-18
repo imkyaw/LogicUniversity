@@ -1,0 +1,282 @@
+﻿@using logicProject.Models.EF;
+
+@{
+    ViewBag.Title = "CreatePO";
+    List<Supplier> suppliersList = (List<Supplier>)ViewData["SupplierList"];
+    Layout = "~/Views/Inventory/_ClerkLayout.cshtml";
+    //Written By Zhen Xiang
+}
+<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+
+@section Styles {
+
+    <link rel="stylesheet" href="https://max.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
+}
+
+<h2>Create PO</h2>
+
+@*<p>PO number: </p>*@
+
+<br />
+
+@using (Html.BeginForm("SavePO", "Inventory", FormMethod.Post))
+{
+    <select id="supplierSelect" name="supplierId">
+        <option value="">Select Supplier</option>
+        @foreach (var s in suppliersList)
+        {
+            <option value="@s.SupplierId">@s.SupplierName</option>
+        }
+    </select>
+
+    <table id="detailTable" style="display:none" class="table table-striped table-bordered table-sm table-responsive table-hover cell-border">
+        <tr>
+            <th>Item Code</th>
+            <th>Description</th>
+            <th>Quantity</th>
+            <th>U.O.M.</th>
+            <th>Unit Price</th>
+            <th>Total Price</th>
+            <th></th>
+        </tr>
+        <tr>
+            <td colspan="5" align="right">Subtotal: </td>
+            <td colspan="2" id="subtotal"></td>
+        </tr>
+    </table>
+    <br />
+
+    <br />
+    <input id="addrow" type="button" value="Add Row" onclick="addRow()" hidden />
+    <br />
+    <input id="submitter" type="submit" value="Submit" hidden disabled />
+}
+
+@section Scripts {
+
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.6/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.html5.min.js"></script>
+}
+
+<script>
+    var detailsPopulator = [];
+    var pricePopulator = [];
+
+    $(document).ready(function () {
+        $('#detailTable').DataTable();
+    });
+
+    $("#supplierSelect").change(function () {
+        $("#subtotal").html("");
+        $(".entry").remove();   //Remove all entries
+        if ($("#supplierSelect").val() == "") {
+            $("#detailTable").hide();
+            $("#addrow").hide();
+            $("#submitter").hide();
+        }
+        else {  //For some reason, the first row create from "" empty select menu
+            var txt = $("#supplierSelect").val();
+            $.post("/inventory/getsupplieritemprices",
+                { supplierId: txt },
+                function (data, status) {
+                    if (status == "success") {
+                        pricePopulator = JSON.parse(data);
+                    };
+                });
+            $.post("/inventory/getsupplieritemdetails",
+                { supplierId: txt },
+                function (data, status) {
+                    if (status == "success") {
+                        detailsPopulator = JSON.parse(data);
+                    };
+                })
+            $("#detailTable").show();
+            $("#addrow").show();
+            $("#submitter").show();
+
+        }
+    });
+    
+
+    function addRow() {
+        var table = document.getElementById("detailTable");
+        //Note to self: a create element can only be used once
+        var row = table.insertRow(table.rows.length - 1);
+        row.setAttribute("class", "entry");
+
+        //var cell1 = row.insertCell(0);
+        //var textInputNode = document.createElement("input");
+        //textInputNode.setAttribute("class", "prodId");
+        //textInputNode.setAttribute("type", "text");
+        //textInputNode.setAttribute("size", "5");
+        //textInputNode.setAttribute("name", "itemCode");
+        //textInputNode.setAttribute("required", "true");
+        //textInputNode.setAttribute("onchange", "populate(this)");
+        //cell1.appendChild(textInputNode);
+
+        var cell1 = row.insertCell(0);
+        var newSelect = document.createElement("select");
+        newSelect.setAttribute("class", "prodId");
+        newSelect.setAttribute("name", "itemCode");
+        newSelect.setAttribute("required", "true");
+        newSelect.setAttribute("onchange", "populate(this)");
+        cell1.appendChild(newSelect);
+        var option = document.createElement("option");
+        option.value = null;
+        option.text = "";
+        newSelect.add(option);
+        for (var i = 0; i < pricePopulator.length; i++) {
+            option = document.createElement("option");
+            option.value = pricePopulator[i].ProductId;
+            option.text = pricePopulator[i].ProductId;
+            newSelect.add(option);
+        }
+        
+
+        var cell2 = row.insertCell(1);
+        var textInputNode = document.createElement("input");
+        textInputNode.setAttribute("class", "formfield");
+        textInputNode.setAttribute("readonly", "true");
+        textInputNode.setAttribute("type", "text");
+        textInputNode.setAttribute("name", "description");
+        cell2.appendChild(textInputNode);
+
+        var cell3 = row.insertCell(2);
+        var numInputNode = document.createElement("input");
+        numInputNode.setAttribute("class", "formfield");
+        numInputNode.setAttribute("type", "number");
+        numInputNode.setAttribute("name", "quantity");
+        numInputNode.setAttribute("required", "true");
+        numInputNode.setAttribute("min", "0");
+        numInputNode.setAttribute("onchange", "totalPriceUpdate(this)")
+        cell3.appendChild(numInputNode);
+
+        var cell4 = row.insertCell(3);
+        textInputNode = document.createElement("input");
+        textInputNode.setAttribute("class", "formfield");
+        textInputNode.setAttribute("readonly", "true");
+        textInputNode.setAttribute("type", "text");
+        textInputNode.setAttribute("size", "10");
+        textInputNode.setAttribute("name", "unitOfMeasure");
+        cell4.appendChild(textInputNode);
+        //Note: Design states that readonly fields cannot be locked by constraints
+        var cell5 = row.insertCell(4);
+        textInputNode = document.createElement("input");
+        textInputNode.setAttribute("class", "formfield");
+        textInputNode.setAttribute("size", "5");
+        textInputNode.setAttribute("readonly", "true");
+        textInputNode.setAttribute("type", "text");
+        textInputNode.setAttribute("name", "unitPrice");
+        cell5.appendChild(textInputNode);
+
+        var cell5 = row.insertCell(5);
+        textInputNode = document.createElement("input");
+        textInputNode.setAttribute("readonly", "true");
+        textInputNode.setAttribute("size", "10");
+        textInputNode.setAttribute("type", "text");
+        textInputNode.setAttribute("name", "totalPrice");
+        textInputNode.setAttribute("class", "rowTotal");
+        cell5.appendChild(textInputNode);
+
+        var cell6 = row.insertCell(6);
+        var buttonNode = document.createElement("input");
+        buttonNode.setAttribute("type", "button");
+        buttonNode.setAttribute("value", "Remove");
+        buttonNode.setAttribute("onclick", "deleteRow(this)");
+        cell6.appendChild(buttonNode);
+
+        var s = document.getElementById("submitter");
+
+        s.disabled = true;
+    }
+
+    function deleteRow(x) {
+        p = x.parentNode.parentNode;    //refers to the current row of the element
+        p.parentNode.removeChild(p);    //Goes up one level, in order to delete the parent as a child
+        updateSubtotal();
+    }
+
+    function totalPriceUpdate(x) {
+        if (x.parentNode.parentNode.childNodes[4].firstChild.value != null || x.parentNode.parentNode.childNodes[4].firstChild.value != "") {
+            x.parentNode.parentNode.childNodes[5].firstChild.value = x.parentNode.parentNode.childNodes[4].firstChild.value * x.parentNode.parentNode.childNodes[2].firstChild.value;
+        }
+        updateSubtotal();
+    }
+
+    function populate(x) {
+        //get id in the id field of the same row
+        x.value = x.value.toUpperCase();
+        var idCheck = x.parentNode.parentNode.childNodes[0].firstChild.value;
+        //alert(typeof idCheck + ", " + idCheck);
+        //compare against the list of items drawn
+        var matched = detailsPopulator.find(findItem);
+        var matchedPrice = pricePopulator.find(findItem);
+        //alert(typeof matched);
+        function findItem(value) {
+            return value.ProductId == idCheck
+        }
+        checkForNullId();
+        if (matched === undefined) {
+            //empty description
+            x.parentNode.parentNode.childNodes[1].firstChild.value = null;
+            //empty unit of measure
+            x.parentNode.parentNode.childNodes[3].firstChild.value = null;
+        }
+        else {
+            //populate description with appropiate description
+            x.parentNode.parentNode.childNodes[1].firstChild.value = matched.Description;
+            //populate Unit of Measure with appropiate unit
+            x.parentNode.parentNode.childNodes[3].firstChild.value = matched.Unit;
+        }
+
+        if (matchedPrice === undefined) {
+            x.parentNode.parentNode.childNodes[4].firstChild.value = null;
+            x.parentNode.parentNode.childNodes[5].firstChild.value = null;
+        }
+        else {
+            //populate unit price with correct price
+            x.parentNode.parentNode.childNodes[4].firstChild.value = matchedPrice.Price;
+            //populate unit price with correct price
+            x.parentNode.parentNode.childNodes[5].firstChild.value = matchedPrice.Price * x.parentNode.parentNode.childNodes[2].firstChild.value;
+        }
+        updateSubtotal();
+    }
+
+    function updateSubtotal() {
+        var sub = document.getElementById("subtotal");
+        var sum = 0;
+        $(".rowTotal").each(function () {
+            var value = $(this).val();
+            // add only if the value is number
+            if (!isNaN(value) && value.length != 0) {
+                sum = sum + parseFloat(value);
+            }
+        });
+        sub.innerHTML = sum;
+    }
+
+    function checkForNullId() {
+        var checklist = document.getElementsByClassName("prodId");
+        var isNotNull = true;
+        var s = document.getElementById("submitter");
+        for (var i = 0; i < checklist.length; i++) {
+            if (!checklist[i].value) {
+                isNotNull = false;
+                break;
+            }
+        }
+        if (isNotNull) {
+            s.disabled = false;
+        }
+        else {
+            s.disabled = true;
+        }
+            
+    }
+
+
+</script>
+
+
