@@ -50,6 +50,18 @@
     }
 </ol>
 
+
+@using (Html.BeginForm("StockCardDetails", "Supervisor", FormMethod.Post))
+{
+    <p>Creation Date Range:</p>
+    <p>From: <input type="date" name="startDate" required /> To: <input type="date" name="endDate" required /></p>
+    <br />
+    <input type="submit" value="Search By Date" />
+    <br />
+    <br />
+}
+
+
 <table class="table">
     <tr>
         <th>

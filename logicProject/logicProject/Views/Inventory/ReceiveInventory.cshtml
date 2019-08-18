@@ -9,7 +9,7 @@
 
 <h2>Receive Inventory</h2>
 
-@using (Html.BeginForm("AddManyItems", "Inventory", FormMethod.Post, new { id = "ReceieveIntForm" }))
+@using (Html.BeginForm("AddManyItems", "Inventory", FormMethod.Post, new { id = "ReceiveIntForm" }))
 {
     <p>Date Receieved: <input type="date" name="date" required/></p>
     <p>Supplier:</p>
@@ -91,7 +91,7 @@
 
         var cell2 = row.insertCell(1);
         var numericInputNode = document.createElement("input");
-        numericInputNode.setAttribute("type", "numeric");
+        numericInputNode.setAttribute("type", "number");
         numericInputNode.setAttribute("name", "ReceivedQty");
         numericInputNode.setAttribute("required", "true");
         numericInputNode.setAttribute("min", "1");
