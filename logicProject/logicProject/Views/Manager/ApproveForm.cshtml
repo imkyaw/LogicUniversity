@@ -7,7 +7,7 @@
     //Written by Udaya
     Layout = "~/Views/Manager/_ManagerLayout.cshtml";
     List<AdjustmentDetail> cart_list = (List<AdjustmentDetail>)ViewData["cart_list"];
-    StoreStaff user = (StoreStaff)Session["user"];
+    StoreStaff user = (StoreStaff)Session["StoreStaff"];
     Adjustment reqId = ViewData["adjustment"] as Adjustment;
 }
 

@@ -102,7 +102,7 @@
 
 
 
-    @using (Html.BeginForm("addnew", "clerk", FormMethod.Post))
+    @using (Html.BeginForm("addnew", "Inventory", FormMethod.Post))
     {
 
         <tr>
@@ -147,7 +147,7 @@
 
 @if (cart_list != null)
 {
-    using (Html.BeginForm("submitrequest", "clerk", FormMethod.Post))
+    using (Html.BeginForm("submitrequest", "Inventory", FormMethod.Post))
     {
         <input type="hidden" value="@form_number" name="form_number" />
         <input type="hidden" value="@user.StaffId" name="emp_id" />

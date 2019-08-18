@@ -52,6 +52,10 @@ namespace logicProject.Controllers
         {
             ViewBag.ProductCategory = new SelectList(db.Product, "Category", "Category");
             ViewBag.Products = new SelectList(db.Product, "Description", "Description");
+            if (TempData["shortMessage"] != null)
+            {
+                ViewBag.Message = TempData["shortMessage"].ToString();
+            }
             return View();
         }
 
@@ -75,7 +79,7 @@ namespace logicProject.Controllers
         public ActionResult CreateRequest(string products,string qty)
         {
             DepartmentStaff a = Session["DeptStaff"] as DepartmentStaff;
-            if (products != "" && ModelState.IsValid)
+            if (products != "" && ModelState.IsValid )
             {
                 List<string> head = new List<string>();
                 RequestDAO.AddRequest(products, qty, a.StaffId);
@@ -85,7 +89,8 @@ namespace logicProject.Controllers
                 Utility.EmailService.SendEmail(head, Utility.EmailBody.RequestSubject, message);
                 return RedirectToAction("OrderStatus","Request");
             }
-            return RedirectToAction("OrderStatus", "Request");
+            TempData["shortMessage"] = "Please choose at least a product to create a request form";
+            return RedirectToAction("RequestForm", "Request");
         }
 
         //Save Request

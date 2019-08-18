@@ -1,6 +1,7 @@
 ﻿@{
-   
+
     //Layout = "~/Views/Shared/_Layout.cshtml";
+    
 }
 <style>
     select {
@@ -40,6 +41,12 @@
     </div>
 
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/css/select2.min.css" rel="stylesheet" />
+<div class="alert alert-danger alert-dismissible" id="alertbox">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    <h4><i class="icon fa fa-ban"></i> Alert!</h4>
+    Please choose at least a product to create a request form.
+</div>
+    
 <div class="box">
     <div class="box-header">
         @*<input type="button" class="btn btn-sm btn-dropbox" id="add-row" value="Add Row">*@
@@ -185,9 +192,11 @@
 
     //On Ready - Get Data from servers
     $(document).ready(function () {
+        $('#alertbox').hide();
         $(".products").select2();
         getData();
         callProductList();
+       
        // PopulateQty();
     });
 
@@ -197,11 +206,15 @@
         let productId = document.getElementsByClassName("products");
         let QtyTextBox = document.getElementsByClassName("qty");
         //let check = document.getElementById("savfav");
+        let checker = 0;
         for (let i = 0; i < productId.length; i++) {
             var id = productId[i].id;
             id = id.replace("products", "");
             console.log(productId[i].value);
             console.log(QtyTextBox[i].value);
+            if (QtyTextBox[i].value < 1) {
+                checker = 1;
+            }
             if (products != "")
                 products = products + "," + productId[i].value;
             else
@@ -210,6 +223,10 @@
                 qty = qty + "," + QtyTextBox[i].value;
             else
                 qty = qty + QtyTextBox[i].value;
+        }
+        if (products == "" || checker==1) {
+            $('#alertbox').show();
+            return;
         }
         //check = check.val();
         var xmlHttp = new XMLHttpRequest();

@@ -34,9 +34,19 @@
 </head>
 <body class="hold-transition skin-black-light sidebar-mini">
 
-    @{ DepartmentStaff user = (DepartmentStaff)HttpContext.Current.Session["DeptStaff"];
-        bool tempHead = (bool)HttpContext.Current.Session["TempHead"];
-        bool check = (bool)HttpContext.Current.Session["CheckHead"];}
+    @{ 
+        DepartmentStaff user = (DepartmentStaff)HttpContext.Current.Session["DeptStaff"];
+        bool tempHead=false;
+        bool check=false;
+        if(HttpContext.Current.Session["TempHead"]!=null)
+        {
+            tempHead = (bool)HttpContext.Current.Session["TempHead"];
+        }
+        if (HttpContext.Current.Session["CheckHead"] != null)
+        {
+            check = (bool)HttpContext.Current.Session["CheckHead"];
+        }
+    }
     <div class="wrapper">
         <header class="main-header">
             <!-- Logo -->
