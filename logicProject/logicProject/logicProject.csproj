@@ -192,8 +192,18 @@
       <DependentUpon>201908160728370_addFav.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\DAO\CollectionPointDAO.cs" />
+    <Compile Include="Models\DAO\DepartmentDAO.cs" />
+    <Compile Include="Models\DAO\DepartmentStaffDAO.cs" />
+    <Compile Include="Models\DAO\DisbursementDAO.cs" />
     <Compile Include="Models\DAO\FavOrderDAO.cs" />
+    <Compile Include="Models\DAO\ProductDAO.cs" />
+    <Compile Include="Models\DAO\PurchaseOrderDAO.cs" />
     <Compile Include="Models\DAO\RequestDAO.cs" />
+    <Compile Include="Models\DAO\StockTransactionDAO.cs" />
+    <Compile Include="Models\DAO\StoreStaffDAO.cs" />
+    <Compile Include="Models\DAO\SupplierDAO.cs" />
+    <Compile Include="Models\DAO\SupplierProductDAO.cs" />
     <Compile Include="Models\DBContext\LogicEntities.cs" />
     <Compile Include="Models\EF\Adjustment.cs" />
     <Compile Include="Models\EF\AdjustmentDetail.cs" />
@@ -218,8 +228,16 @@
     <Compile Include="Models\EF\SupplierProduct.cs" />
     <Compile Include="Models\ViewModel\AuthorizationViewModel.cs" />
     <Compile Include="Models\ViewModel\CategoryViewModel.cs" />
+    <Compile Include="Models\ViewModel\DisbursementDetailViewModel.cs" />
     <Compile Include="Models\ViewModel\DisbursementViewModel.cs" />
+    <Compile Include="Models\ViewModel\ItemModel.cs" />
+    <Compile Include="Models\ViewModel\ItemSuppliedViewModel.cs" />
+    <Compile Include="Models\ViewModel\ProductViewModel.cs" />
+    <Compile Include="Models\ViewModel\RequestItemsViewModel.cs" />
+    <Compile Include="Models\ViewModel\RequestListViewModel.cs" />
     <Compile Include="Models\ViewModel\RequestViewModel.cs" />
+    <Compile Include="Models\ViewModel\RetrievalViewModel.cs" />
+    <Compile Include="Models\ViewModel\ViewModelDepartment.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility\EmailBody.cs" />
     <Compile Include="Utility\EmailService.cs" />
