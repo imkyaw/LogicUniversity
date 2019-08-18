@@ -149,7 +149,7 @@
         numInputNode.setAttribute("type", "number");
         numInputNode.setAttribute("name", "quantity");
         numInputNode.setAttribute("required", "true");
-        numInputNode.setAttribute("min", "0");
+        numInputNode.setAttribute("min", "1");
         numInputNode.setAttribute("onchange", "totalPriceUpdate(this)")
         cell3.appendChild(numInputNode);
 
@@ -260,7 +260,7 @@
     function checkForNullId() {
         var checklist = document.getElementsByClassName("prodId");
         var isNotNull = true;
-        if(checklist == null){
+        if (checklist.length == 0) {
             isNotNull = false;
         }
         var s = document.getElementById("submitter");
