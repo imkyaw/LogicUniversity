@@ -20,7 +20,7 @@ namespace logicProject.Controllers
             string session = (string)Session["StoreSession"];
             if (session != null)
             {
-                return RedirectToAction("Dashboard", "Store");
+                //return RedirectToAction("Index", "Inventory");
             }
             if (username == null || password == null)
                 return View();
@@ -37,7 +37,22 @@ namespace logicProject.Controllers
             }
             Session["StoreSession"] = sessionId;
             Session["StoreStaff"] = user;
-            return RedirectToAction("Dashboard", "Store");
+            if (user.StaffType == "Clerk")
+            {
+                return RedirectToAction("Index", "Inventory");
+            }
+            else if (user.StaffType == "Supervisor")
+            {
+                return RedirectToAction("Index", "Supervisor");
+            }
+            else if (user.StaffType == "Manager")
+            {
+                return RedirectToAction("Index", "Manager");
+            }
+            else
+            {
+                return View();
+            }
         }
         [Route("Department")]
         public ActionResult DepartmentLogin(string username, string password)
