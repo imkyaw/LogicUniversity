@@ -93,11 +93,8 @@
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.4.1.js"
-        integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
-        crossorigin="anonymous"></script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js"></script>
+@*<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js"></script>*@
 <script>
     // Qty add and minus
     function maintainQty(clicked_id,clicked_name) {
@@ -143,7 +140,7 @@
             placeholder: "select product",
             ajax: {
                 type: "GET",
-                url: "/Request/SearchCategory",
+                url: "http://172.17.102.117:80/logic/Request/SearchCategory",
                 success: console.log("success"),
                 dataType: "json",
                 data: function (params) {
@@ -164,7 +161,7 @@
             id = id.replace("productcategory", "");
             var d = e.params.data;
             $.ajax({
-                url: "/Request/SearchProduct?category=" + d.text,
+                url: "http://172.17.102.117:80/logic/Request/SearchProduct?category=" + d.text,
                 dataType: 'json',
                 type: "GET",
                 success: function (products) {
@@ -231,7 +228,7 @@
         //check = check.val();
         var xmlHttp = new XMLHttpRequest();
 
-        xmlHttp.open("post", "CreateRequest?products=" + products + "&qty=" + qty , true);
+        xmlHttp.open("post", "http://172.17.102.117:80/logic/Request/CreateRequest?products=" + products + "&qty=" + qty , true);
         console.log(xmlHttp.timeout);
         xmlHttp.send();
         xmlHttp.onreadystatechange = function () {
@@ -247,7 +244,7 @@
     function callProductList() {
         var d = $("#e-table").DataTable({
             "ajax": {
-                "url": "/Product/GetProductList",
+                "url": "http://172.17.102.117:80/logic/Product/GetProductList",
                 "type": "POST",
                 //"data": function (data) {
                 //},

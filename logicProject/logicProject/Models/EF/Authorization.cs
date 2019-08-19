@@ -11,7 +11,7 @@ namespace logicProject.Models.EF
         [Key]
         public int AuthNo { get; set; }
         public int StaffId { get; set; }
-        public int DeptId { get; set; }
+        public string DeptId { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
     }

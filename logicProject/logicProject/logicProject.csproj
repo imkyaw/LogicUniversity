@@ -194,6 +194,10 @@
     <Compile Include="Migrations\201908160728370_addFav.Designer.cs">
       <DependentUpon>201908160728370_addFav.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201908190221134_UpdateDbString.cs" />
+    <Compile Include="Migrations\201908190221134_UpdateDbString.Designer.cs">
+      <DependentUpon>201908190221134_UpdateDbString.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\DAO\CollectionPointDAO.cs" />
     <Compile Include="Models\DAO\DepartmentDAO.cs" />
@@ -2906,6 +2910,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201908160728370_addFav.resx">
       <DependentUpon>201908160728370_addFav.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908190221134_UpdateDbString.resx">
+      <DependentUpon>201908190221134_UpdateDbString.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

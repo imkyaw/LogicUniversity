@@ -78,7 +78,7 @@
                                 <!-- User image -->
                                 <!-- Menu Footer-->
                                 <li>
-                                      <a href="/Login/Logout?type=d" class=""><i class="fa fa-sign-out"></i>Sign out</a>
+                                      <a href="~/Login/Logout?type=d" class=""><i class="fa fa-sign-out"></i>Sign out</a>
                                 </li>
                             </ul>
                         </li>
@@ -97,7 +97,7 @@
                     <li class="header">@user.StaffType</li>
 
                     <li>
-                        <a href="/Departments/Dashboard">
+                        <a href="~/Departments/Dashboard">
                             <i class="fa fa-dashboard"></i> <span>Dashboard</span>
                         </a>
                     </li>
@@ -111,18 +111,18 @@
                                 <span>Request Orders</span>
                             </a>
                             <ul class="treeview-menu">
-                                <li><a href="/Request/RequestForm"><i class="fa fa-circle-o"></i> Requistion Form</a></li>
-                                <li><a href="/Request/ViewFaveOrder"><i class="fa fa-circle-o"></i>Favourite Request</a></li>
+                                <li><a href="~/Request/RequestForm"><i class="fa fa-circle-o"></i> Requistion Form</a></li>
+                                <li><a href="~/Request/ViewFaveOrder"><i class="fa fa-circle-o"></i>Favourite Request</a></li>
                             </ul>
                         </li>
                     }
                     <li>
-                        <a href="/Request/OrderStatus">
+                        <a href="~/Request/OrderStatus">
                             <i class="fa fa-th"></i> <span>Order Status</span>
                         </a>
                     </li>
                     <li>
-                        <a href="/Product/ProductCatalog">
+                        <a href="~/Product/ProductCatalog">
                             <i class="fa fa-list"></i> <span>Product Catalog</span>
                         </a>
                     </li>
@@ -139,15 +139,15 @@
                                 <ul class="treeview-menu">
                                     @if (user.StaffType == "head" && check != true || tempHead == true && user.StaffType != "head")
                                     {
-                                        <li><a href="/DeptHead/AppointRepresentative"><i class="fa fa-circle-o"></i> Appoint Representative</a></li>
+                                        <li><a href="~/DeptHead/AppointRepresentative"><i class="fa fa-circle-o"></i> Appoint Representative</a></li>
                                     }
-                                    <li><a href="/DeptHead/AuthorizeStaff"><i class="fa fa-circle-o"></i> Authorize Staff</a></li>
+                                    <li><a href="~/DeptHead/AuthorizeStaff"><i class="fa fa-circle-o"></i> Authorize Staff</a></li>
                                 </ul>
                             </li>
                             if (user.StaffType == "head" && check != true || tempHead == true && user.StaffType != "head")
                             {
                                 <li>
-                                    <a href="/Request/GetLocation">
+                                    <a href="~/Request/GetLocation">
                                         <i class="fa fa-envelope"></i> <span>Collection Point</span>
                                     </a>
                                 </li>
@@ -157,7 +157,7 @@
                     @if (user.Department.RepId == user.StaffId)
                     {
                         <li>
-                            <a href="/Representative/DisbursementList">
+                            <a href="~/Representative/DisbursementList">
                                 <i class="fa fa-calendar"></i> <span>Disbursement List</span>
                             </a>
                         </li>
@@ -179,10 +179,7 @@
             <!-- /.content -->
         </div>
     </div>
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-
-    @Scripts.Render("~/my-admin-lte/js")
+    
 
     <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <script src="~/my-admin-lte/plugins/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>

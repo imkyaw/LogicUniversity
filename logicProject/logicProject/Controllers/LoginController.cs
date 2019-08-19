@@ -70,7 +70,7 @@ namespace logicProject.Controllers
                 return View();
             }
             DateTime today = DateTime.Now;
-            int deptId = int.Parse(user.DeptId);
+            string deptId = user.DeptId;
             Authorization authorization = db.Authorization.Where(x => x.StaffId == user.StaffId && x.StartDate<=today && x.EndDate>=today).FirstOrDefault();
             Authorization checkHead = db.Authorization.Where(x=>x.DeptId==deptId && x.StartDate <= today && x.EndDate >= today).FirstOrDefault();
             string sessionId = Guid.NewGuid().ToString();

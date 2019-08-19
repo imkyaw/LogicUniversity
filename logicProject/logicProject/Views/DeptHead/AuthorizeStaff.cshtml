@@ -110,7 +110,7 @@
             theme: "classic",
             ajax: {
                 type: "GET",
-                url: "/DeptHead/GetStaffList",
+                url: "http://localhost/logic/DeptHead/GetStaffList",
                 success: console.log("success"),
                 dataType: "json",
                 data: function (params) {
@@ -138,7 +138,7 @@
             
                 $.ajax(
                     {
-                        url: "/DeptHead/AppointStaff?staffname=" + selected + "&getStartDate=" + startDate + "&getEndDate=" + endDate,
+                        url: "http://localhost/logic/DeptHead/AppointStaff?staffname=" + selected + "&getStartDate=" + startDate + "&getEndDate=" + endDate,
                         contentType: 'application/json',
                         dataType: 'json',
                         type: 'POST',

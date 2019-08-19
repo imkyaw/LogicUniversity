@@ -123,7 +123,7 @@
             theme: "classic",
             ajax: {
                 type: "GET",
-                url: "/DeptHead/GetStaffList",
+                url: "http://localhost/logic/DeptHead/GetStaffList",
                 success: console.log("success"),
                 dataType: "json",
                 data: function (params) {
@@ -147,7 +147,7 @@
             let selected = $(".StaffName option:selected").text();
             $.ajax(
                 {
-                    url: "/DeptHead/AppointRep?staffname=" + selected,
+                    url: "http://localhost/logic/DeptHead/AppointRep?staffname=" + selected,
                     contentType: 'application/json',
                     dataType: 'json',
                     type: 'POST',

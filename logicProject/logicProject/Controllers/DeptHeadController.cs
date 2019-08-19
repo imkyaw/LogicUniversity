@@ -59,7 +59,6 @@ namespace logicProject.Controllers
         public ActionResult AppointRepresentative()
         {
             DepartmentStaff a = Session["DeptStaff"] as DepartmentStaff;
-
             Department d = db.Department.Where(x => x.DeptId == a.DeptId).FirstOrDefault();
             List<DepartmentStaff> list = db.DepartmentStaff.ToList();
             String name = list.Where(x => x.StaffId == d.RepId).Select(x => x.StaffName).FirstOrDefault();
@@ -92,7 +91,7 @@ namespace logicProject.Controllers
         public ActionResult AuthorizeStaff()
         {
             DepartmentStaff a = Session["DeptStaff"] as DepartmentStaff;
-            int deptId = int.Parse(a.DeptId);
+            string deptId = a.DeptId;
             ViewData["tempHead"] = false;
             if (a.StaffId == a.Department.HeadId)
             {
@@ -118,7 +117,7 @@ namespace logicProject.Controllers
         {
             var result = db.DepartmentStaff.SingleOrDefault(b => b.StaffName == staffname);
             var resultStaffId = result.StaffId;
-            var resultDeptId = int.Parse(result.DeptId);
+            string resultDeptId = result.DeptId;
             var list = db.Authorization.Where(x => x.DeptId == resultDeptId && x.EndDate >= getStartDate && x.StartDate <= getEndDate).ToList();
             if (list.Count>0)
             {
@@ -142,7 +141,7 @@ namespace logicProject.Controllers
         {
             var result = db.DepartmentStaff.SingleOrDefault(b => b.StaffName == staffname);
             var resultStaffId = result.StaffId;
-            var resultDeptId = int.Parse(result.DeptId);
+            string resultDeptId = result.DeptId;
             DateTime fromDate = DateTime.ParseExact(getStartDate, "MM/dd/yyyy HH:mm:ss",
                                            CultureInfo.InvariantCulture);
             DateTime toDate = DateTime.ParseExact(getEndDate, "MM/dd/yyyy HH:mm:ss",
